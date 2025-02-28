@@ -1,9 +1,6 @@
-#ifndef __POTION_CLASS__
-#define __POTION_CLASS__
-
 #include "constants.h"
-#include "classes.h"
 #include <string>
+#include "Potion.h"
 
 // default constructor used while rendering belongings of the marchant/stuff in the treasure
 Potion::Potion()
@@ -88,5 +85,3 @@ int Potion::ShowPrice() const
 {
 	return price;
 }
-
-#endif

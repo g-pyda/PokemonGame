@@ -1,8 +1,8 @@
-#ifndef __ALL_FUNCTIONS__
-#define __ALL_FUNCTIONS__
+#pragma once
 
 #include "constants.h"
-#include "classes.h"
+#include "Pokemon.h"
+#include "Potion.h"
 
 // function that represents attack of the pokemon on the other one
 void Attack(Pokemon* fighter, Pokemon* opponent, types effectA);
@@ -27,5 +27,3 @@ vector <Potion> getPotions(vector <string> lines);
 
 // function to read status of caught pokemons
 vector <bool> getPCaught(string line);
-
-#endif

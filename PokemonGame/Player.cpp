@@ -1,10 +1,8 @@
-#ifndef __PLAYER_CLASS__
-#define __PLAYER_CLASS__
 
 #include "constants.h"
-#include "classes.h"
 #include "functions.h"
 #include <string>
+#include "Player.h"
 
 // default constructor of the player
 Player::Player()
@@ -868,4 +866,3 @@ void Player::writeRecords()
     cout << endl << "------> Your records are saved successfully." << endl;
 
 }
-#endif

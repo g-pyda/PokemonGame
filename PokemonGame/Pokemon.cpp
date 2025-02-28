@@ -1,9 +1,9 @@
-#ifndef __POKEMON_CLASS__
-#define __POKEMON_CLASS__
+
 
 #include "constants.h"
-#include "classes.h"
 #include <string>
+#include "Pokemon.h"
+#include "Potion.h"
 
 // method to evolve the pokemon
 void Pokemon::Evolve()
@@ -213,5 +213,3 @@ void Pokemon::BattleStats()
     else cout << "INACTIVE";
     cout << endl;
 }
-
-#endif
