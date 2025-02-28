@@ -1,0 +1,92 @@
+#ifndef __POTION_CLASS__
+#define __POTION_CLASS__
+
+#include "constants.h"
+#include "classes.h"
+#include <string>
+
+// default constructor used while rendering belongings of the marchant/stuff in the treasure
+Potion::Potion()
+{
+	int k = rand()%2, t = rand()%13;
+	if (k==0) // creation of the healing potion
+	{
+		kind = false;
+		if (t < 4) 
+		{
+			points = 10;
+			price = 30;
+		}
+		else if (t < 8)
+		{
+			points = 20;
+			price = 50;
+		}
+		else if (t < 11)
+		{
+			points = 50;
+			price = 120;
+		}
+		else
+		{
+			points = 200;
+			price = 300;
+		}
+	}
+	else // creation of the buff potion
+	{
+		kind = true;
+		if (t < 4) 
+		{
+			points = 20;
+			price = 50;
+		}
+		else if (t < 8)
+		{
+			points = 50;
+			price = 110;
+		}
+		else if (t < 11)
+		{
+			points = 100;
+			price = 200;
+		}
+		else
+		{
+			points = 200;
+			price = 390;
+		}
+	}	
+}
+
+// constructor used while generating potions from the records
+Potion::Potion(string elements[3])
+{
+	// array of string representing the elements of potion class
+	// 0 - type, 1 - points, 2 - price
+	if (elements[0] == "0") kind = false;
+	else kind = true;
+	points = std::stoi(elements[1]);
+	price = std::stoi(elements[2]);
+}
+
+// methods to show the kind of potion
+string Potion::ShowKind() const
+{
+	if (kind) return "Buff";
+	else return "Healing";	
+}
+
+// method to show the points gained from the potion 
+int Potion::ShowPoints() const
+{
+	return points;	
+}
+
+// method to show the market price of the potion
+int Potion::ShowPrice() const
+{
+	return price;
+}
+
+#endif
