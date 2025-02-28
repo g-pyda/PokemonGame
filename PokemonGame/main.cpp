@@ -5,20 +5,24 @@
 #include "Pokemon.h"
 #include "Potion.h"
 #include "functions.h"
+#include <ctime>
+
+using namespace std;
 
 int main(int argc, char** argv)
 {
 	// dispaying the information about the game and options
 	int choice;
-	cout << "------> Welcome to the Pokemon Game!" << endl << "Choose option:" << endl;
+	cout << "------> \x1B[31mWelcome to the Pokemon Game!\033[0m" << endl << "Choose option:" << endl;
 	do
 	{
 		cout << "0: New Game" << endl;
 		cout << "1: Resume Game" << endl;
 		cout << "2: Quit" << endl;
 		cin >> choice;
+		printf("\033c");
 		if (!cin.good()) {
-			cout << "[!!!]Invalid input, try again." << endl;
+			cout << "[!!!] Invalid input, try again." << endl;
 			cin.clear();
 			cin.ignore(1000, '\n');
 			choice = -1;
@@ -59,10 +63,11 @@ int main(int argc, char** argv)
 			int i = 4;
 			for (;; i++)
 			{
-				if (recordLines[i].find("pokemons:") != std::string::npos)
+				if (recordLines[i].find("pokemons:") == std::string::npos)
 					break;
 				temp.push_back(recordLines[i]);
 			}
+			i--;
 			vector <Potion> potions = getPotions(temp);
 			temp.clear();
 			for (i++; i < recordLines.size() - 2; i++)
@@ -85,12 +90,17 @@ int main(int argc, char** argv)
 		return 0;
 	}
 	// main game module
+	printf("\033c");
 	cout << "------> Hello, " << player->ShowName() << endl << "------> LET'S CATCH THEM ALL" << endl;
 	// lottery of events
 	int event = 16;
 	while (!player->CaughtAll())
 	{
-		if (event == 16) event = rand() % 16; // the first iteration of the while loop
+		if (event == 16) { // the first iteration of the while loop
+			srand(time(NULL));
+			event = rand() % 16;
+			continue;
+		}
 		else if (choice == 1 || event != 16)// not the first iteration
 		{
 			player->ShowStats();
@@ -103,8 +113,9 @@ int main(int argc, char** argv)
 				cout << "4 - see, which pokemon species you've already caught" << endl;
 				cout << "0 - exit the game. WARNING! This action doesn't save your progress!" << endl;
 				cin >> choice;
+				printf("\033c");
 				if (!cin.good()) {
-					cout << "[!!!]Invalid input, try again." << endl;
+					cout << "[!!!] Invalid input, try again." << endl;
 					cin.clear();
 					cin.ignore(1000, '\n');
 					choice = -1;
@@ -131,7 +142,33 @@ int main(int argc, char** argv)
 			}
 			if (choice == 2 || choice == 3 || choice == 4) continue;
 		}
-		if (event < 6) player->WildBattle(); // battle with wild pokemon
+		if (event < 6) {	// battle with wild pokemon
+			player->WildBattle();
+			if (player->ShowPokemonNR() <= 0) {
+				do {
+					cout << "------> Unfortunately you lost all of your pokemons! Better luck next time!" << endl;
+					cout << "What action would you like to make?" << endl;
+					cout << "1 - delete your current save to start over." << endl;
+					cout << "2 - exit the game without saving." << endl;
+					cin >> choice;
+					printf("\033c");
+					if (!cin.good()) {
+						cout << "[!!!] Invalid input, try again." << endl;
+						cin.clear();
+						cin.ignore(1000, '\n');
+						choice = -1;
+					}
+				} while (choice != 1 && choice != 2);
+				switch (choice) {
+				case 1:
+					remove("records.txt");
+				case 2:
+					cout << "------> Thank you for playing!";
+					delete player;
+					return 0;
+				}
+			}
+		}
 		else if (event < 8) player->CoachBattle(); // battle with the coach
 		else if (event < 13) player->Treasure(); // treasure found
 		else player->Marchant(); // marchant found		

@@ -1,6 +1,7 @@
 #pragma once
 
 #include "constants.h"
+#include "Potion.h"
 
 // class representing a pokemon 
 class Pokemon

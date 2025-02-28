@@ -69,7 +69,8 @@ void Pokemon::Evolve()
 // default constructor (used while spawning coached/wild/marchant/hostile pokemon)
 Pokemon::Pokemon(unsigned int pl_exp)
 {
-	int lot = rand()%151;
+    srand(time(NULL));
+	int lot = rand() % 151;
     while (true)
     {
         // 150 and 151 are legendary/mythical pokemons - very rare
@@ -95,7 +96,7 @@ Pokemon::Pokemon(unsigned int pl_exp)
     // calculation of the CP
     int max = maxCP[pokedex[index-1].role][pokedex[index-1].stages];
     int min = minCP[pokedex[index-1].role][pokedex[index-1].stages];
-    cp = min + rand()%int((max - min) * stat_mod+ 10);
+    cp = min + rand()%int((max - min) * stat_mod + 10);
 
     // calculation of the HP
     max = maxHP[pokedex[index-1].role][pokedex[index-1].stages];
