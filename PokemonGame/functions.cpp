@@ -262,3 +262,10 @@ vector <bool> getPCaught(string line)
 	}
 	return result;
 }
+
+string displayBar()
+{
+	return colorCodes[BrightBlack][0]
+		+ "--------------------------------------------------------------------------------------"
+		+ colorEnd;
+}

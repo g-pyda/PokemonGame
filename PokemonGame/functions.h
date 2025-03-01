@@ -27,3 +27,6 @@ vector <Potion> getPotions(vector <string> lines);
 
 // function to read status of caught pokemons
 vector <bool> getPCaught(string line);
+
+// function to display separator bar in the terminal
+string displayBar();

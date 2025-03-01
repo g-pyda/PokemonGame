@@ -10,7 +10,7 @@ void Pokemon::Evolve()
 {
     if (exp >= 500)
     {
-        cout << endl << "------> Amazing! Your " << pokedex[index + 1].name << "is evolving!";
+        cout << endl << "\t\tAmazing! Your " << colorCodes[Cyan][0] << pokedex[index + 1].name << colorEnd << "is evolving!";
         pokeindex evolution = Null;
 	    if (index == Eevee)
         {
@@ -50,7 +50,7 @@ void Pokemon::Evolve()
 
             // update of the index and adding the new ability
             index = evolution;
-            cout << "It evolved into " << pokedex[index + 1].name;
+            cout << "It evolved into " << colorCodes[Cyan][0] << pokedex[index + 1].name << colorEnd;
             int lot = rand()%100;
             if (lot < 70)
             {
@@ -189,11 +189,15 @@ pokeindex Pokemon::ShowINDEX() const
 // method to show info about the pokemon during the battle
 void Pokemon::BattleStats()
 {
-    cout << pokedex[index - 1].name << " | " << hp_left << " / " << hp << " HP LEFT | " << cp << " CP | " << pp << " PP | type: ";
+    cout << pokedex[index - 1].name << " | ";
+    if ((float)hp_left / hp > 0.75) cout << colorCodes[BrightGreen][0];
+    else if ((float)hp_left / hp > 0.3) cout << colorCodes[BrightYellow][0];
+    else cout << colorCodes[BrightRed][0];
+    cout << hp_left << " / " << hp << " HP LEFT" << colorCodes[White][0] << " | " << cp << " CP | " << pp << " PP | type: ";
     int ty = pokedex[index - 1].type.size();
     for (int i = 0; i < ty; i++)
     {
-        cout << types_s[pokedex[index - 1].type[i]];
+        cout << colorCodes[typeColors[pokedex[index - 1].type[i]]][0] << types_s[pokedex[index - 1].type[i]] << colorCodes[White][0];
         if (i != ty - 1) cout << ", ";
     }
     cout << " | ";
@@ -201,7 +205,7 @@ void Pokemon::BattleStats()
     if (ab > 0)
     {   
         cout << "abilities: ";
-        string st_abil[] = {"healing ", "special attack", "dodge", "reemit", "sbreaker", "shield"};
+        string st_abil[] = {"healing ", "special attack", "dodge", "reemition", "shield break", "shield creation"};
         for (int i = 0; i < ab; i++)
         {
             cout << st_abil[ability[i]];

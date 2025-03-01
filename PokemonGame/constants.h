@@ -351,3 +351,56 @@ const static unsigned int maxHP[3][6]
 // -- shield breaker - overcomes additional protection of the oponent
 // -- shield - creates a barrier for the next attack of the oponent 
 enum abilities { healing, spattack, dodge, reemit, sbreaker, shield };
+
+// enum representing the colors created in the terminal
+enum ColorName {
+    Black, Red, Green, Yellow, Blue, Magenta, Cyan, White,
+    BrightBlack, BrightRed, BrightGreen, BrightYellow, BrightBlue, BrightMagenta, BrightCyan, BrightWhite
+};
+
+// 2D array containing ASCII escape sequences for foreground and background colors
+// example: colorCodes[BrightCyan][1]
+const static string colorCodes[16][2] = {
+    {"\x1B[30m", "\x1B[40m"},  // Black
+    {"\x1B[31m", "\x1B[41m"},  // Red
+    {"\x1B[32m", "\x1B[42m"},  // Green
+    {"\x1B[33m", "\x1B[43m"},  // Yellow
+    {"\x1B[34m", "\x1B[44m"},  // Blue
+    {"\x1B[35m", "\x1B[45m"},  // Magenta
+    {"\x1B[36m", "\x1B[46m"},  // Cyan
+    {"\x1B[37m", "\x1B[47m"},  // White
+    {"\x1B[90m", "\x1B[100m"}, // Bright Black
+    {"\x1B[91m", "\x1B[101m"}, // Bright Red
+    {"\x1B[92m", "\x1B[102m"}, // Bright Green
+    {"\x1B[93m", "\x1B[103m"}, // Bright Yellow
+    {"\x1B[94m", "\x1B[104m"}, // Bright Blue
+    {"\x1B[95m", "\x1B[105m"}, // Bright Magenta
+    {"\x1B[96m", "\x1B[106m"}, // Bright Cyan
+    {"\x1B[97m", "\x1B[107m"}  // Bright White
+};
+
+const static string colorEnd = "\x1B[0m";
+const static string clearTerminal = "\033c";
+const static string invalidInput = colorCodes[Red][0] + "[!!!] Invalid input, try again." + colorEnd;
+
+// array mapping Pokemon types to their respective colors
+const int typeColors[18] = {
+    White,      // Normal
+    Red,        // Fire
+    Blue,       // Water
+    Yellow,     // Electric
+    Green,      // Grass
+    Cyan,       // Ice
+    BrightRed,  // Fighting
+    Magenta,    // Poison
+    BrightBlack,      // Ground
+    BrightBlue, // Flying
+    BrightMagenta, // Psychic
+    BrightGreen,   // Bug
+    BrightYellow,  // Rock
+    BrightBlack,         // Ghost
+    BrightCyan,    // Dragon
+    BrightWhite,   // Fairy
+    BrightBlack,         // Steel
+    BrightBlack          // Dark
+};
