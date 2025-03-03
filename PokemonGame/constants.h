@@ -14,9 +14,6 @@
 #endif
 
 
-
-using namespace std;
-
 // enum representing states of the fight module
 enum fight_outcome { kill, catching, runaway, win, failure };
 
@@ -66,8 +63,8 @@ enum types
     Fairy, Steel, Dark
 };
 
-//vector of strings of types of pokemons
-const static vector <string> types_s = {
+//std::vector of std::strings of types of pokemons
+const static std::vector <std::string> types_s = {
     "Normal", "Fire", "Water", "Electric", "Grass",
     "Ice", "Fighting", "Poison", "Ground", "Flying",
     "Psychic", "Bug", "Rock", "Ghost", "Dragon",
@@ -94,13 +91,13 @@ struct pokepage
     // place in the pokedex of the pokemon
     pokeindex index;
     // name of the pokemon
-    string name;
+    std::string name;
     // classification by role in the battle
     roles role;
     // classification by health level
     healthLevel health;
-    // vector of types of the pokemon
-    vector <types> type;
+    // std::vector of types of the pokemon
+    std::vector <types> type;
     // number of evolution stages
     // 0>1>2 combination, 3>4 combination, 5 combination
     int stages;
@@ -109,9 +106,9 @@ struct pokepage
     pokeindex evolution;
 };
 
-// vector that stores pages about the pokemons - POKEDEX
+// std::vector that stores pages about the pokemons - POKEDEX
 // {pokeindex, name, fight-role, health-level, types, stage of evolution, next evolution}
-const static vector <pokepage> pokedex =
+const static std::vector <pokepage> pokedex =
 {
    {Bulbasaur, "Bulbasaur", Balanced, Medium, {Grass, Poison}, 0, Ivysaur},
    {Ivysaur, "Ivysaur", Balanced, Medium, {Grass, Poison}, 1, Venusaur},
@@ -268,7 +265,7 @@ const static vector <pokepage> pokedex =
 
 // map to specify the efficiency of the pokemon in the attack
 // rows - the attacking pokemon, columns - the attacked pokemon
-static unordered_map<types, unordered_map<types, double>> efficiencyMap = {
+static std::unordered_map<types, std::unordered_map<types, double>> efficiencyMap = {
     {Normal, {{Rock, 0.8}, {Ghost, 0.0}, {Steel, 0.8}}},
     {Fire, {{Fire, 0.8}, {Water, 0.8}, {Grass, 1.2}, {Ice, 1.2}, {Bug, 1.2}, {Rock, 0.8}, {Dragon, 0.8}, {Steel, 1.2}}},
     {Water, {{Fire, 1.2}, {Water, 0.8}, {Grass, 0.8}, {Ground, 1.2}, {Rock, 1.2}, {Dragon, 0.8}}},
@@ -360,7 +357,7 @@ enum ColorName {
 
 // 2D array containing ASCII escape sequences for foreground and background colors
 // example: colorCodes[BrightCyan][1]
-const static string colorCodes[16][2] = {
+const static std::string colorCodes[16][2] = {
     {"\x1B[30m", "\x1B[40m"},  // Black
     {"\x1B[31m", "\x1B[41m"},  // Red
     {"\x1B[32m", "\x1B[42m"},  // Green
@@ -379,9 +376,9 @@ const static string colorCodes[16][2] = {
     {"\x1B[97m", "\x1B[107m"}  // Bright White
 };
 
-const static string colorEnd = "\x1B[0m";
-const static string clearTerminal = "\033c";
-const static string invalidInput = colorCodes[Red][0] + "[!!!] Invalid input, try again." + colorEnd;
+const static std::string colorEnd = "\x1B[0m";
+const static std::string clearTerminal = "\033c";
+const static std::string invalidInput = colorCodes[Red][0] + "[!!!] Invalid input, try again." + colorEnd;
 
 // array mapping Pokemon types to their respective colors
 const int typeColors[18] = {

@@ -4,13 +4,14 @@
 #include <string>
 #include "Pokemon.h"
 #include "Potion.h"
+#include "functions.h"
 
 // method to evolve the pokemon
 void Pokemon::Evolve()
 {
     if (exp >= 500)
     {
-        cout << endl << "\t\tAmazing! Your " << colorCodes[Cyan][0] << pokedex[index + 1].name << colorEnd << "is evolving!";
+        std::cout << std::endl << "Amazing! Your " << colorCodes[Cyan][0] << pokedex[index + 1].name << colorEnd << "is evolving!";
         pokeindex evolution = Null;
 	    if (index == Eevee)
         {
@@ -50,7 +51,7 @@ void Pokemon::Evolve()
 
             // update of the index and adding the new ability
             index = evolution;
-            cout << "It evolved into " << colorCodes[Cyan][0] << pokedex[index + 1].name << colorEnd;
+            std::cout << "It evolved into " << colorCodes[Cyan][0] << pokedex[index + 1].name << colorEnd;
             int lot = rand()%100;
             if (lot < 70)
             {
@@ -59,9 +60,9 @@ void Pokemon::Evolve()
                 while (!(ability.empty()) && ability[0] == abilities(ab))
                     ab = rand()%6;
                 ability.push_back(abilities(ab));
-                cout << " and gained an ability";
+                std::cout << " and gained an ability";
             }
-            cout << "." << endl;
+            std::cout << "." << std::endl;
         }
     }
 }
@@ -116,9 +117,9 @@ Pokemon::Pokemon(unsigned int pl_exp)
 }
 
 // constructor used while reading the data from the records
-Pokemon::Pokemon(string elements[8])
+Pokemon::Pokemon(std::string elements[8])
 {
-    // elements - array of string representing the elements of pokemon class
+    // elements - array of std::string representing the elements of pokemon class
 	// 0 - index, 1 - cp, 2 - hp, 3 - hp_left
 	// 4 - pp, 5 - exp, 6 - ability, 7 - shield
     index = pokeindex(std::stoi(elements[0]));
@@ -189,32 +190,36 @@ pokeindex Pokemon::ShowINDEX() const
 // method to show info about the pokemon during the battle
 void Pokemon::BattleStats()
 {
-    cout << pokedex[index - 1].name << " | ";
-    if ((float)hp_left / hp > 0.75) cout << colorCodes[BrightGreen][0];
-    else if ((float)hp_left / hp > 0.3) cout << colorCodes[BrightYellow][0];
-    else cout << colorCodes[BrightRed][0];
-    cout << hp_left << " / " << hp << " HP LEFT" << colorCodes[White][0] << " | " << cp << " CP | " << pp << " PP | type: ";
+    std::cout << color(pokedex[index - 1].name + " | ", BrightWhite);
+    if ((float)hp_left / hp > 0.75)
+        std::cout << color(std::to_string(hp_left) + " / " + std::to_string(hp) + " HP LEFT", BrightGreen);
+    else if ((float)hp_left / hp > 0.3) 
+        std::cout << color(std::to_string(hp_left) + " / " + std::to_string(hp) + " HP LEFT", Yellow);
+    else
+        std::cout << color(std::to_string(hp_left) + " / " + std::to_string(hp) + " HP LEFT", BrightRed);
+    std::cout << color(" | ", BrightWhite) << color(std::to_string(cp) + " CP", Blue) 
+        << color(" | ", BrightWhite) << color(std::to_string(pp) + " PP", Magenta) 
+        << color(" | type: ", BrightWhite);
     int ty = pokedex[index - 1].type.size();
     for (int i = 0; i < ty; i++)
     {
-        cout << colorCodes[typeColors[pokedex[index - 1].type[i]]][0] << types_s[pokedex[index - 1].type[i]] << colorCodes[White][0];
-        if (i != ty - 1) cout << ", ";
+        std::cout << color(types_s[pokedex[index - 1].type[i]], (ColorName)typeColors[pokedex[index - 1].type[i]]);
+        if (i != ty - 1) std::cout << color(", ", BrightWhite);
     }
-    cout << " | ";
+    std::cout << color(" | ", BrightWhite);
     int ab = ability.size();
     if (ab > 0)
     {   
-        cout << "abilities: ";
-        string st_abil[] = {"healing ", "special attack", "dodge", "reemition", "shield break", "shield creation"};
+        std::cout << color("abilities: ", BrightMagenta);
+        std::string st_abil[] = {"healing ", "special attack", "dodge", "reemition", "shield break", "shield creation"};
         for (int i = 0; i < ab; i++)
         {
-            cout << st_abil[ability[i]];
-            if (i != ab - 1) cout << ", ";
+            std::cout << color(st_abil[ability[i]], BrightMagenta);
+            if (i != ab - 1) std::cout << color(", ", BrightMagenta);
         }
-        cout << " | ";
+        std::cout << color(" | ", BrightWhite);
     }
-    cout << "shield: ";
-    if (shield) cout << "ACTIVE";
-    else cout << "INACTIVE";
-    cout << endl;
+    std::cout << color("shield: ", BrightWhite);
+    if (shield) std::cout << color("ACTIVE", BrightWhite) << std::endl;
+    else std::cout << color("INACTIVE", BrightWhite) << std::endl;
 }

@@ -8,25 +8,25 @@
 void Attack(Pokemon* fighter, Pokemon* opponent, types effectA);
 
 // function to read the records from the previous game
-vector <string> readRecords();
+std::vector <std::string> readRecords();
 
 // function to read name of the player from the text file
-string getName(string line);
+std::string getName(std::string line);
 
 // function to read name of the player from the text file
-int getExp(string line);
+int getExp(std::string line);
 
 // function to read name of the player from the text file
-int getGold(string line);
+int getGold(std::string line);
 
 // function to read name of the player from the text file
-vector <Pokemon> getPokemons(vector <string> lines);
+std::vector <Pokemon> getPokemons(std::vector <std::string> lines);
 
 // function to read name of the player from the text file
-vector <Potion> getPotions(vector <string> lines);
+std::vector <Potion> getPotions(std::vector <std::string> lines);
 
 // function to read status of caught pokemons
-vector <bool> getPCaught(string line);
+std::vector <bool> getPCaught(std::string line);
 
-// function to display separator bar in the terminal
-string displayBar();
+// function to wrap a std::string with terminal color
+std::string color(std::string text, ColorName color, bool background = false);

@@ -9,22 +9,22 @@ class Player
 {
 private:
 	// name/nickname of the player
-	string name;
+	std::string name;
 	// experience of the player
 	unsigned int exp;
 	// gold obtained by the player
 	unsigned int gold;
-	// vector of posessed potions
-	vector <Potion> potions;
-	// vector of posessed pokemons
-	vector <Pokemon> pokemons;
+	// std::vector of posessed potions
+	std::vector <Potion> potions;
+	// std::vector of posessed pokemons
+	std::vector <Pokemon> pokemons;
 	// array depicting whether the pokemon was caught or not (to check if you caught them all)
 	bool pokeCaught[151];
 public:
 	// default constructor of the player
 	Player();
 	// constructor of the player out of saved data
-	Player(string n, int e, int g, vector <Potion> pt, vector <Pokemon> pk, vector <bool> pc);
+	Player(std::string n, int e, int g, std::vector <Potion> pt, std::vector <Pokemon> pk, std::vector <bool> pc);
 	// method to say if player found all pokemons
 	bool CaughtAll();
 	// method to obtain an item/pokemon out of treasure/hostile
@@ -39,7 +39,7 @@ public:
 	// method to show data of the user
 	unsigned int ShowEXP() const;
 	unsigned int ShowGold() const;
-	string ShowName() const;
+	std::string ShowName() const;
 	unsigned int ShowPokemonNR() const;
 	unsigned int ShowPotionNR() const;
 	unsigned int HMCaught() const;
