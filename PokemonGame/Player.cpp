@@ -353,7 +353,7 @@ void Player::WildBattle()
 			fighter->BattleStats();
 			std::cout << color("Wild pokemon: ", BrightWhite);
 			opponent.BattleStats();
-			std::cout << std::endl << color("Choose type of the attack.", BrightWhite) << std::endl;
+			std::cout << std::endl << color("Choose type of the attack.", BrightWhite) << std::endl << std::endl;
 			for (int i = 0; i < pokedex[fighter->index - 1].type.size(); i++)
 				std::cout << color(std::to_string(i + 1) + ". ", BrightWhite) 
 					<< color(types_s[pokedex[fighter->index - 1].type[i]], (ColorName)typeColors[pokedex[fighter->index - 1].type[i]])
@@ -1022,5 +1022,5 @@ void Player::writeRecords()
     // Close the file
     file.close();
     std::cout << color("Your records were saved successfully.", BrightWhite) << std::endl;
-
+	sleep(2);
 }
