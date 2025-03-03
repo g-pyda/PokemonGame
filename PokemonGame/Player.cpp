@@ -7,8 +7,8 @@
 // default constructor of the player
 Player::Player()
 {
-	cout << "------> Insert your nickname: " << endl;
-	cin >> name;
+	std::cout << color("Insert your nickname: ",BrightWhite) << std::endl;
+	std::cin >> name;
 	// starting values for new player
 	exp = 100;
 	gold = 100;
@@ -19,14 +19,16 @@ Player::Player()
 
 	while (true)
 	{
-		cout << "------> Choose your start pokemon: " << endl;
-		cout << "1. Bulbasaur" << endl << "2. Squirtle" << endl << "3. Charmander" << endl;
-		cin >> choice;
-		printf("\033c");
-		if (!cin.good()) {
-			cout << "[!!!] Invalid input, try again." << endl;
-			cin.clear();
-			cin.ignore(1000, '\n');
+		std::cout << color("Choose your start pokemon: ",BrightWhite) << std::endl
+			<< color("1: Bulbasaur", BrightGreen) << std::endl 
+			<< color("2: Squirtle", BrightBlue) << std::endl 
+			<< color("3: Charmander", BrightRed) << std::endl;
+		std::cin >> choice;
+		std::cout << clearTerminal;
+		if (!std::cin.good()) {
+			std::cout << invalidInput << std::endl;
+			std::cin.clear();
+			std::cin.ignore(1000, '\n');
 			continue;
 		}
 		break;
@@ -57,7 +59,7 @@ Player::Player()
 }
 
 // constructor of the player out of saved data
-Player::Player(string n, int e, int g, vector <Potion> pt, vector <Pokemon> pk, vector <bool> pc)
+Player::Player(std::string n, int e, int g, std::vector <Potion> pt, std::vector <Pokemon> pk, std::vector <bool> pc)
 {
 	name = n;
 	exp = e;
@@ -91,29 +93,31 @@ void Player::GetItem(Pokemon pok)
 // method to sell an object/pokemon from the inventory
 void Player::SellPokemon()
 {
-	string choice;
+	std::string choice;
 	while (true)
 	{
 		try
 		{
 			// display all potions/pokemons in the inventory
-	
-			cout << "------> Choose the pokemon to sell od 'Q' to quit:" << endl;
+
+			ShowStats();
+			std::cout << std::endl; 
 			for (int i = 0; i < pokemons.size(); i++)
 			{
-				cout << i+1 << ". ";
+				std::cout << color(std::to_string(i + 1) + ". ", BrightWhite);
 				pokemons[i].BattleStats();
-				cout << pokemons[i].ShowPrice()*0.8 << endl;
+				std::cout << "\t" <<  color(std::to_string(round(pokemons[i].ShowPrice() * 0.8)) + " coins", BrightYellow) << std::endl;
 			}	
-			cin >> choice;
-			printf("\033c");
+			std::cout << color("Choose the pokemon to sell or 'Q' to quit:", BrightWhite) << std::endl;
+			std::cin >> choice;
+			std::cout << clearTerminal;
 
 			// deleting the pokemon and adding coins
 
-			if (choice == "q") break;
-			else if (std::stoi(choice) > pokemons.size() && choice != "q")
+			if (choice == "q" || choice == "Q") break;
+			else if (std::stoi(choice) > pokemons.size() && choice != "q" && choice != "Q")
 			{
-				cout << "[!!!] Invalid input, try again." << endl;
+				std::cout << invalidInput << std::endl;
 				choice.clear();	
 				continue;
 			}
@@ -122,9 +126,9 @@ void Player::SellPokemon()
 			pokemons.erase(pokemons.begin()+std::stoi(choice)-1);
 			break;
 		}
-		catch(const exception& e)
+		catch(const std::exception& e)
 		{
-			cout << "[!!!] Invalid input, try again." << endl;
+			std::cout << invalidInput << std::endl;
 			choice.clear();
 		}
 		
@@ -137,24 +141,30 @@ void Player::SellPokemon()
 void Player::SellPotion()
 {
 	
-	string choice;
+	std::string choice;
 	while (true)
 	{
 		try
 		{
 			// display all potions/pokemons in the inventory
-			cout << "------> Choose the potion to sell or 'Q' to quit:" << endl;
+
+			ShowStats();
+
+			std::cout << color("Choose the potion to sell or 'Q' to quit:", BrightWhite) << std::endl;
 			for (int i = 0; i < potions.size(); i++)
 			{
-				cout << i+1 << "." << potions[i].ShowKind() << " " << potions[i].ShowPoints() 
-				<< " " << potions[i].ShowPrice()*0.8 << endl;
+				std::cout << color(std::to_string(i + 1) + ".", BrightWhite);
+				if (potions[i].ShowKind() == "Buff") std::cout << color(potions[i].ShowKind(),Blue);
+				else std::cout << color(potions[i].ShowKind(),BrightGreen);
+				std::cout << color(": " + std::to_string(potions[i].ShowPoints()) + " " + std::to_string(potions[i].ShowPrice() * 0.8), BrightWhite)
+				<< std::endl;
 			}
-			cin >> choice;
-			printf("\033c");
-			if (choice == "q") break;
-			else if (std::stoi(choice) > potions.size() && choice != "q")
+			std::cin >> choice;
+			std::cout << clearTerminal;
+			if (choice == "q" || choice == "Q") break;
+			else if (std::stoi(choice) > potions.size() && choice != "q" && choice != "Q")
 			{
-			cout << "[!!!]Invalid input, try again." << endl;
+			std::cout << invalidInput << std::endl;
 			choice.clear();
 			continue;
 			}
@@ -163,9 +173,9 @@ void Player::SellPotion()
 			potions.erase(potions.begin()+std::stoi(choice)-1);
 			break;
 		}
-		catch(const exception& e)
+		catch(const std::exception& e)
 		{
-			cout << "[!!!]Invalid input, try again." << endl;
+			std::cout << invalidInput << std::endl;
 			choice.clear();
 		}
 		
@@ -183,7 +193,7 @@ void Player::Buy(Potion pot)
 	}
 	else
 	{
-		cout << "------> You don't have enough money to buy this potion." << endl;
+		std::cout << color("You don't have enough money to buy this potion.", Red) << std::endl;
 	}
 }
 
@@ -197,7 +207,7 @@ void Player::Buy(Pokemon pok)
 	}
 	else
 	{
-		cout << "------> You don't have enough money to buy this pokemon." << endl;
+		std::cout << color("You don't have enough money to buy this pokemon.", Red) << std::endl;
 	}
 	pokeCaught[pok.index-1] = true;
 }
@@ -213,7 +223,7 @@ unsigned int Player::ShowGold() const
 	return gold;
 }
 
-string Player::ShowName() const
+std::string Player::ShowName() const
 {
 	return name;
 }
@@ -241,9 +251,14 @@ unsigned int Player::HMCaught() const
 // method to show statistics
 void Player::ShowStats()
 {
-	cout << endl << "| " << name << " | EXP: " << exp << " | GOLD: " << gold << " | EQ: " <<
-		" pokemons - " << ShowPokemonNR() << " potions - " << ShowPotionNR() << " | " <<
-		HMCaught() << " species caught |" << endl;
+	std::cout << color("| " + name + " | ", BrightWhite) 
+		<< color("EXP: " + std::to_string(exp), Blue) << color(" | ", BrightWhite)
+		<< color("GOLD : " + std::to_string(gold), BrightYellow)
+		<< color(" | EQ :", BrightWhite) 
+		<< color(" pokemons - " + std::to_string(ShowPokemonNR()), BrightGreen)
+		<< color(",", BrightWhite) 
+		<< color(" potions - " + std::to_string(ShowPotionNR()), BrightMagenta) << color(" | ", BrightWhite)
+		<< color(std::to_string(HMCaught()) + " species caught ", Green) << color("|", BrightWhite) << std::endl;
 }
 
 // method to display all the pokemons in the inventory
@@ -251,7 +266,7 @@ void Player::ShowPokemons()
 {
 	for (int i = 0; i < pokemons.size(); i++)
 	{
-		cout << i+1 << ". ";
+		std::cout << color(std::to_string(i+1) + ". ", BrightWhite);
 		pokemons[i].BattleStats();
 	}
 }
@@ -261,8 +276,16 @@ void Player::ShowPotions()
 {
 	for (int i = 0; i < potions.size(); i++)
 	{
-		cout << potions[i].ShowKind() << " " << potions[i].ShowPoints() 
-		<< "points " << potions[i].ShowPrice() << "coins" << endl;  
+		std::cout << i + 1 << ". ";
+		if (potions[i].ShowKind() == "Buff")
+			std::cout << color(potions[i].ShowKind(), Blue) << " " 
+			<< color(std::to_string(potions[i].ShowPoints()) + " points ", BrightWhite) 
+			<< color(std::to_string(potions[i].ShowPrice()) + " coins", BrightYellow)
+			<< std::endl;
+		else std::cout << color(potions[i].ShowKind(), BrightMagenta) << " "
+			<< color(std::to_string(potions[i].ShowPoints()) + " points ", BrightWhite)
+			<< color(std::to_string(potions[i].ShowPrice()) + " coins", BrightYellow)
+			<< std::endl;
 	}
 }
 
@@ -272,23 +295,22 @@ void Player::WildBattle()
 	// spawning the random pokemon
 	Pokemon opponent(exp);
 	// decision if to take up a battle
-	cout << "------> You have encountered a wild pokemon!" << endl;
-	opponent.BattleStats();
-	cout << endl << "Your pokemons:" << endl;
-	ShowPokemons();
-
-	string choice;
+	std::string choice;
 	while (true)
 	{
-		cout << endl << "------> Do you want to fight?" << endl;
-		cout << "Y - yes   N - no" << endl;
-		cin >> choice;
-		printf("\033c");
-		if (choice == "y" || choice == "n") break;
-		else cout << "[!!!] Invalid input, try again." << endl;
+		std::cout << color("You have encountered a wild pokemon!", BrightWhite) << std::endl;
+		opponent.BattleStats();
+		std::cout << std::endl << color("Your pokemons:", BrightWhite) << std::endl;
+		ShowPokemons();
+		std::cout << std::endl << color("Do you want to fight?", BrightWhite) << std::endl;
+		std::cout << color("Y: yes   N: no", BrightWhite) << std::endl;
+		std::cin >> choice;
+		std::cout << clearTerminal;
+		if (choice == "y" || choice == "Y" || choice == "n" || choice == "N") break;
+		else std::cout << invalidInput << std::endl;
 	}
-			
-	if(choice == "y")
+	if (choice == "n" || choice == "N") return;
+	else if(choice == "y" || choice == "Y")
 	{
 	fight_outcome outcome;
 	unsigned int hp_taken;
@@ -300,93 +322,101 @@ void Player::WildBattle()
 	int choice_p;
 	while (true)
 	{
-		cout << "------> Choose the pokemon to fight." << endl;
+		std::cout << color("Wild pokemon:", BrightWhite) << std::endl;
+		opponent.BattleStats();
+		std::cout << std::endl << color("Choose the pokemon to fight.", BrightWhite) << std::endl;
 		ShowPokemons();
-		cin >> choice_p;
-		printf("\033c");
-		if (!cin.good()) {
-			cout << "[!!!] Invalid input, try again." << endl;
-			cin.clear();
-			cin.ignore(1000, '\n');
+		std::cin >> choice_p;
+		std::cout << clearTerminal;
+		if (!std::cin.good()) {
+			std::cout << invalidInput << std::endl;
+			std::cin.clear();
+			std::cin.ignore(1000, '\n');
 			continue;
 		}
-		if (choice_p <= pokemons.size()) break;
-		else cout << "[!!!] Invalid input, try again." << endl;
+		if (choice_p <= pokemons.size() && choice_p > 0) break;
+		else std::cout << invalidInput << std::endl;
 	}
 				
 	Pokemon* fighter = &pokemons[choice_p - 1];
-	cout << "------> You chose " << pokedex[fighter->index - 1].name << ". Let's fight!" << endl << endl;
+	std::cout << color("You chose ", BrightWhite) << color(pokedex[fighter->index - 1].name, Blue) 
+		<< color(". Let's fight!", BrightWhite) << std::endl;
+	sleep(2);
 	// loop of every round
 	while (true)
 	{	
 		// choice of the attack of the player 
-		cout << "   Your pokemon: ";
-		fighter->BattleStats();
-		cout << "   Wild pokemon: ";
-		opponent.BattleStats();
 		int choice_t;
 		while (true)
 		{
-			cout << endl << "------> Choose type of the attack." << endl;
+			std::cout << color("Your pokemon: ", BrightWhite);
+			fighter->BattleStats();
+			std::cout << color("Wild pokemon: ", BrightWhite);
+			opponent.BattleStats();
+			std::cout << std::endl << color("Choose type of the attack.", BrightWhite) << std::endl;
 			for (int i = 0; i < pokedex[fighter->index - 1].type.size(); i++)
-				cout << i + 1 << ". " << types_s[pokedex[fighter->index - 1].type[i]] << " attack." << endl;
+				std::cout << color(std::to_string(i + 1) + ". ", BrightWhite) 
+					<< color(types_s[pokedex[fighter->index - 1].type[i]], (ColorName)typeColors[pokedex[fighter->index - 1].type[i]])
+					<< color(" attack.", BrightWhite) << std::endl;
 			
-			cin >> choice_t;
-			printf("\033c");
-			if (!cin.good()) {
-				cout << "[!!!] Invalid input, try again." << endl;
-				cin.clear();
-				cin.ignore(1000, '\n');
+			std::cin >> choice_t;
+			std::cout << clearTerminal;
+			if (!std::cin.good()) {
+				std::cout << invalidInput << std::endl;
+				std::cin.clear();
+				std::cin.ignore(1000, '\n');
 				continue;
 			}
 			if (choice_t <= pokedex[fighter->index - 1].type.size()) break;
-			else cout << "[!!!] Invalid input, try again." << endl;
+			else std::cout << invalidInput << std::endl;
 		}
 		effect = pokedex[fighter->index - 1].type[choice_t-1];
 		// attack of the player
-		cout << "   Your pokemon: ";
+		std::cout << color("Your pokemon: ", BrightWhite);
 		fighter->BattleStats();
-		cout << "   Wild pokemon: ";
+		std::cout << color("Wild pokemon: ", BrightWhite);
 		opponent.BattleStats();
 		Attack(fighter, &opponent, effect);
 		special_attack = abilities(7);
 		special_attack2 = abilities(7);
 		sleep(3);
-		printf("\033c");
+		std::cout << clearTerminal;
 		// checking if the wild pokemon still can fight
 		if (opponent.hp_left > opponent.hp || opponent.hp_left == 0)
 		{
 			// wild pokemon cannot fight back
 			opponent.hp_left = 1;
 			outcome = win;
-			cout << "   Your pokemon: ";
-			fighter->BattleStats();
-			cout << "   Wild pokemon: ";
-			opponent.BattleStats();
-			cout << endl << "------> Wild pokemon cannot fight back!" << endl;
 			
 			while (true)
 			{
-				cout << "C - catch the pokemon" << endl << "K - kill the pokemon" << endl;
-				cin >> choice;
-				printf("\033c");
-				if (choice == "c" || choice == "k") break;
-				else cout << "[!!!] Invalid input, try again." << endl;
+				std::cout << color("Your pokemon: ", BrightWhite);
+				fighter->BattleStats();
+				std::cout << color("Wild pokemon: ", BrightWhite);
+				opponent.BattleStats();
+				std::cout << std::endl << color("Wild pokemon cannot fight back!", BrightGreen) << std::endl << std::endl
+					<< color("C: catch the pokemon", BrightWhite) << std::endl 
+					<< color("K: kill the pokemon", BrightWhite) << std::endl;
+				std::cin >> choice;
+				std::cout << clearTerminal;
+				if (choice == "c" || choice == "C" || choice == "k" || choice =="K") break;
+				else std::cout << invalidInput << std::endl;
 			}
-			if (choice == "c") outcome = catching;
-			else if (choice == "k") outcome = kill;
+			if (choice == "c" || choice == "C") outcome = catching;
+			else if (choice == "k" || choice == "K") outcome = kill;
 			break;
 		} 
-		cout << "   Your pokemon: ";
+		std::cout << color("Your pokemon: ", BrightWhite);
 		fighter->BattleStats();
-		cout << "   Wild pokemon: ";
+		std::cout << color("Wild pokemon: ", BrightWhite);
 		opponent.BattleStats();
-		cout << endl << endl << "------> Watch out! The wild pokemon is attacking!" << endl;
+		std::cout << std::endl << color("Watch out!", BrightRed) 
+			<< color(" The wild pokemon is attacking!", BrightWhite) << std::endl;
 		// wild pokemon strikes back
 		effect = pokedex[opponent.index - 1].type[rand()%(pokedex[opponent.index - 1].type.size())];
 		Attack(&opponent, fighter, effect);
 		sleep(3);
-		printf("\033c");
+		std::cout << clearTerminal;
 		special_attack = abilities(7);
 		special_attack2 = abilities(7);
 		
@@ -396,44 +426,54 @@ void Player::WildBattle()
 			// player lost
 			outcome = failure;
 			fighter->hp_left = 0;
-			cout << "   Your pokemon: ";
+			std::cout << color("Your pokemon: ", BrightWhite);
 			fighter->BattleStats();
-			cout << "   Wild pokemon: ";
-			opponent.BattleStats();
-			cout << endl << endl << "------> Oh no. Your pokemon got killed!" << endl;
-			
 			pokemons.erase(pokemons.begin() + choice_p - 1);
-			if (pokemons.size() <= 0) return;
+			if (pokemons.size() <= 0) {
+				std::cout << std::endl << color("Oh no. Your pokemon got killed!", Red) << std::endl;
+				sleep(3);
+				return;
+			}
 			while (true)
 			{
-				cout << "C - choose another pokemon" << endl << "R - run away" << endl;
-				cin >> choice;
-				printf("\033c");
-				if (choice == "c" || choice == "r") break;
-				else cout << "[!!!] Invalid input, try again." << endl;
+				std::cout << color("Wild pokemon: ", BrightWhite);
+				opponent.BattleStats();
+				std::cout << std::endl << color("Oh no. Your pokemon got killed!", Red) << std::endl;
+				std::cout << color("C: choose another pokemon", BrightWhite) << std::endl 
+					<< color("R: run away", BrightWhite) << std::endl;
+				std::cin >> choice;
+				std::cout << clearTerminal;
+				if (choice == "c" || choice == "C" || choice == "r" || choice == "R") break;
+				else std::cout << invalidInput << std::endl;
 			}
 			
-			if (choice == "c")
+			if (choice == "c" || choice == "C")
 			{
 				while (true)
 				{
-					cout << "------> Choose the pokemon to fight." << endl;
+					std::cout << color("Wild pokemon: ", BrightWhite);
+					opponent.BattleStats();
+					std::cout << color("Choose the pokemon to fight.", BrightWhite) << std::endl;
 					ShowPokemons();
-					cin >> choice_p;
-					printf("\033c");
-					if (!cin.good()) {
-						cout << "[!!!] Invalid input, try again." << endl;
-						cin.clear();
-						cin.ignore(1000, '\n');
+					std::cin.clear();
+					std::cin.ignore(1000, '\n');
+					std::cin >> choice_p;
+					std::cout << clearTerminal;
+					if (!std::cin.good()) {
+						std::cout << invalidInput << std::endl;
+						std::cin.clear();
+						std::cin.ignore(1000, '\n');
 						continue;
 					}
 					if (choice_p <= pokemons.size()) break;
-					else cout << "[!!!] Invalid input, try again." << endl;
+					else std::cout << invalidInput << std::endl;
 				}		
-				Pokemon* fighter = &pokemons[choice_p - 1];
-				cout << "------> You chose " << pokedex[fighter->index - 1].name << ". Let's fight!" << endl << endl;
+				fighter = &pokemons[choice_p - 1];
+				std::cout << color("You chose ", BrightWhite) 
+					<< color(pokedex[fighter->index - 1].name, Blue) 
+					<< color(". Let's fight!", BrightWhite) << std::endl;
 			}
-			else if (choice == "r")
+			else if (choice == "r" || choice == "R")
 			{
 				outcome = runaway;
 				break;
@@ -441,12 +481,14 @@ void Player::WildBattle()
 		}
 	}
 	// action regarding to the outcome of the battle
-	printf("\033c");
+	std::cout << clearTerminal;
 	switch (outcome)
 	{
 		case kill:
-			cout << endl << "------> You killed the wild pokemon!" << endl;
-			cout << "------> You receive 150 exp, your pokemon receives 50 exp and +50 CP." << endl;
+			std::cout << color("You killed the wild pokemon!", BrightGreen) << std::endl
+				<< color("You receive ", BrightWhite) << color("150 exp", Blue) 
+				<< color(", your pokemon receives ", BrightWhite) << color("50 exp", BrightBlack) 
+				<< color(" and ", BrightWhite) << color("50 CP", Blue) << color(".", BrightWhite) << std::endl;
 			exp += 150;
 			fighter->exp += 50;
 			fighter->cp += 50;
@@ -456,22 +498,26 @@ void Player::WildBattle()
 		case catching:
 			for (int i = 0; i < 4; i++) // there are only 3 tries of catching
 			{
-				cout << endl << "------> You're trying to catch the " << pokedex[opponent.index - 1].name << endl;
-				cout << "T - throw a pokeball" << endl;
+				std::cout << color("You're trying to catch the ", BrightWhite) << color(pokedex[opponent.index - 1].name, Blue) << std::endl << std::endl
+					<< color("T: throw a pokeball", BrightWhite) << std::endl;
 				do
 				{
-					cin >> choice;
-					printf("\033c");
-				} while (choice != "t");
+					std::cin >> choice;
+					std::cout << clearTerminal;
+				} while (choice != "t" && choice != "T");
 				// pokemon wasn't caught - it can escape now
-				if (choice == "t" && rand()%100 - 10*i*i*i > exp*50/(0.5*opponent.cp + 100*opponent.pp + 10*opponent.hp_left))
+				if ((choice == "t" || choice == "T") && rand() % 100 - 10 * i * i * i > exp * 50 / (0.5 * opponent.cp + 100 * opponent.pp + 10 * opponent.hp_left))
 				{
-					cout << endl << "------> The pokemon escaped from the pokeball!" << endl << endl;
+					std::cout << color("The pokemon escaped from the pokeball!", BrightYellow) << std::endl << std::endl;
 					// pokemon may escape
 					if (rand()%100 < 80 * opponent.hp_left / opponent.hp)
 					{
-						cout << "------> Oh no, the pokemon run away from you! Better luck next time!" << endl;
-						cout << "------> You receive 50 exp, your pokemon receives 100 exp and 50 CP." << endl;
+						sleep(3);
+						std::cout << color("Oh no, the pokemon run away from you!", Yellow) 
+							<< color(" Better luck next time!", BrightWhite) << std::endl
+							<< color("You receive ", BrightWhite) << color("50 exp", Blue)
+							<< color(", your pokemon receives ", BrightWhite) << color("100 exp", BrightBlack)
+							<< color(" and ", BrightWhite) << color("50 CP", Blue) << color(".", BrightWhite) << std::endl;
 						exp += 50;
 						fighter->exp += 100; 
 						fighter->cp += 50;
@@ -480,11 +526,14 @@ void Player::WildBattle()
 						break;
 					}
 				}
-				else if (choice == "t")// pokemon got caught
+				else if (choice == "t" || choice == "T")// pokemon got caught
 				{
-					printf("\033c");
-					cout << "------> Congratulations! You caught the " << pokedex[opponent.index - 1].name << endl;
-					cout << "------> You receive 50 exp, your pokemon receives 100 exp and 50 CP." << endl;
+					std::cout << clearTerminal;
+					std::cout << color("Congratulations!", BrightGreen) << color(" You caught the ", BrightWhite) 
+						<< color(pokedex[opponent.index - 1].name, Blue) << std::endl 
+						<< color("You receive ", BrightWhite) << color("50 exp", Blue)
+						<< color(", your pokemon receives ", BrightWhite) << color("100 exp", BrightBlack)
+						<< color(" and ", BrightWhite) << color("50 CP", Blue) << color(".", BrightWhite) << std::endl;
 					opponent.hp_left = opponent.hp * 0.75;
 					pokemons.push_back(opponent);
 					pokeCaught[opponent.index - 1] = true;
@@ -497,9 +546,12 @@ void Player::WildBattle()
 				}
 				if (i == 3) // pokemon wasn't caught in 3 tries so it escapes
 				{	
-					printf("\033c");
-					cout << "------> Oh no, the pokemon run away! Better luck next time!" << endl;
-					cout << "------> You receive 50 exp, your pokemon receives 100 exp and 50 CP." << endl;
+					std::cout << clearTerminal;
+					std::cout << color("Oh no, the pokemon run away from you!", Yellow)
+						<< color(" Better luck next time!", BrightWhite) << std::endl
+						<< color("You receive ", BrightWhite) << color("50 exp", Blue)
+						<< color(", your pokemon receives ", BrightWhite) << color("100 exp", BrightBlack)
+						<< color(" and ", BrightWhite) << color("50 CP", Blue) << color(".", BrightWhite) << std::endl;
 					exp += 50;
 					fighter->exp += 100; 
 					fighter->cp += 50;
@@ -511,11 +563,13 @@ void Player::WildBattle()
 			break;
 		case runaway:
 			outcome = runaway;
-			cout << "------> You receive 1 exp for trying. Better luck next time!" << endl;
+			std::cout << color("You receive ", BrightWhite) << color(" 1 exp", Blue) 
+				<< color(" for trying. Better luck next time!", BrightWhite) << std::endl;
 			exp += 1;
 			break;
 	}
 	}
+	sleep(3);
 }
 
 // method activating game module: fighting with a coach
@@ -524,24 +578,25 @@ void Player::CoachBattle()
 	// spawning the random pokemon
 	Pokemon opponent(exp);
 	// decision if to take up a battle
-	printf("\033c");
-	cout << "------> You have encountered a pokemon coach and they want to fight with you!" << endl << "------> Their pokemon: ";
+	std::cout << clearTerminal;
+	std::cout << color("You have encountered a pokemon coach and they want to fight with you!", BrightWhite) << std::endl 
+		<< std::endl << color("Their pokemon: ", BrightWhite) << std::endl;
 	opponent.BattleStats();
-	cout << endl << "Your pokemons:" << endl;
+	std::cout << std::endl << color("Your pokemons:", BrightWhite) << std::endl;
 	ShowPokemons();
 
-	string choice;
+	std::string choice;
 	while (true)
 	{
-		cout << endl << "------> Do you want to fight?" << endl;
-		cout << "Y - yes   N - no" << endl;
-		cin >> choice;
-		printf("\033c");
-		if (choice == "y" || choice == "n") break;
-		else cout << "[!!!]Invalid input, try again." << endl;
+		std::cout << std::endl << color("Do you want to fight?", BrightWhite) << std::endl
+			<< color("Y: yes   N: no", BrightWhite) << std::endl;
+		std::cin >> choice;
+		std::cout << clearTerminal;
+		if (choice == "y" || choice == "Y" || choice == "n" || choice == "N") break;
+		else std::cout << invalidInput << std::endl;
 	}
-				
-	if(choice == "y")
+	if (choice == "n" || choice == "N") return;
+	else if(choice == "y" || choice == "Y")
 	{
 	fight_outcome outcome;
 	unsigned int hp_taken;
@@ -553,18 +608,20 @@ void Player::CoachBattle()
 	int choice_p;
 	while (true)
 	{
-		cout << "------> Choose the pokemon to fight." << endl;
+		std::cout << color("Coached pokemon: ", BrightWhite) << std::endl;
+		opponent.BattleStats();
+		std::cout << std::endl << color("Choose the pokemon to fight.", BrightWhite) << std::endl;
 		ShowPokemons();
-		cin >> choice_p;
-		printf("\033c");
-		if (!cin.good()) {
-			cout << "[!!!]Invalid input, try again." << endl;
-			cin.clear();
-			cin.ignore(1000, '\n');
+		std::cin >> choice_p;
+		std::cout << clearTerminal;
+		if (!std::cin.good()) {
+			std::cout << invalidInput << std::endl;
+			std::cin.clear();
+			std::cin.ignore(1000, '\n');
 			continue;
 		}
-		if (choice_p <= pokemons.size()) break;
-		else cout << "[!!!]Invalid input, try again." << endl;
+		if (choice_p <= pokemons.size() && choice_p > 0) break;
+		else std::cout << invalidInput << std::endl;
 	}
 				
 	Pokemon* fighter = &pokemons[choice_p - 1];
@@ -572,51 +629,56 @@ void Player::CoachBattle()
 	while (true)
 	{
 		// choice of the attack of the player 
-		cout << endl << "   Your pokemon: ";
-		fighter->BattleStats();
-		cout << endl << "   Coached pokemon: ";
-		opponent.BattleStats();
 		int choice_t;
 		while (true)
 		{
-			cout << endl << "------> Choose type of the attack." << endl;
+			std::cout << color("Your pokemon: ", BrightWhite);
+			fighter->BattleStats();
+			std::cout << color("Coached pokemon: ", BrightWhite);
+			opponent.BattleStats();
+			std::cout << std::endl << color("Choose type of the attack.", BrightWhite) << std::endl;
 			for (int i = 0; i < pokedex[fighter->index - 1].type.size(); i++)
-				cout << i + 1 << ". " << types_s[pokedex[fighter->index - 1].type[i]] << " attack." << endl;
-			cin >> choice_t;
-			printf("\033c");
-			if (!cin.good()) {
-				cout << "[!!!] Invalid input, try again." << endl;
-				cin.clear();
-				cin.ignore(1000, '\n');
+				std::cout << color(std::to_string(i + 1) + ". ", BrightWhite) 
+				<< color(types_s[pokedex[fighter->index - 1].type[i]], (ColorName)typeColors[pokedex[fighter->index - 1].type[i]]) 
+				<< color(" attack.", BrightWhite) << std::endl;
+			std::cin >> choice_t;
+			std::cout << clearTerminal;
+			if (!std::cin.good()) {
+				std::cout << invalidInput << std::endl;
+				std::cin.clear();
+				std::cin.ignore(1000, '\n');
 				continue;
 			}
 			if (choice_t <= pokedex[fighter->index - 1].type.size()) break;
-			else cout << "[!!!] Invalid input, try again." << endl;
+			else std::cout << invalidInput << std::endl;
 		}
 		effect = pokedex[fighter->index - 1].type[choice_t-1];
 		// attack of the player
-		cout << endl << "   Your pokemon: ";
+		std::cout << color("Your pokemon: ", BrightWhite);
 		fighter->BattleStats();
-		cout << endl << "   Coached pokemon: ";
+		std::cout << color("Coached pokemon: ", BrightWhite);
 		opponent.BattleStats();
 		Attack(fighter, &opponent, effect);
 		sleep(3);
 		special_attack = abilities(7);
 		special_attack2 = abilities(7);
 		
-		printf("\033c");
+		std::cout << clearTerminal;
 		// coached pokemon got defeated
 		if (opponent.hp_left > opponent.hp || opponent.hp_left == 0)
 		{
 			// wild pokemon cannot fight back
 			opponent.hp_left = 1;
 			outcome = win;
-			cout << "   Your pokemon: ";
+			std::cout << color("Your pokemon: ", BrightWhite);
 			fighter->BattleStats();
-			cout << "   Coached pokemon: ";
+			std::cout << color("Coached pokemon: ", BrightWhite);
 			opponent.BattleStats();
-			cout << endl << "------> Coached pokemon cannot fight back!" << endl;
-			cout << "------> You receive 100 exp and 50 gold, your pokemon receives 50 exp and 20 cp." << endl;
+			std::cout << std::endl << color("Coached pokemon cannot fight back!", BrightGreen) << std::endl
+				<< color("You receive ", BrightWhite) << color("50 exp", Blue)
+				<< color(" and ", BrightWhite) << color("50 coins", BrightYellow)
+				<< color(", your pokemon receives ", BrightWhite) << color("100 exp", BrightBlack)
+				<< color(" and ", BrightWhite) << color("50 CP", Blue) << color(".", BrightWhite) << std::endl;
 			exp += 100;
 			gold += 50;
 			fighter->cp += 20;
@@ -625,9 +687,9 @@ void Player::CoachBattle()
 			fighter->Evolve();
 			break;
 		} 
-		cout << endl << "   Your pokemon: ";
+		std::cout << color("Your pokemon: ", BrightWhite);
 		fighter->BattleStats();
-		cout << endl << "   Coached pokemon: ";
+		std::cout << color("Coached pokemon: ", BrightWhite);
 		opponent.BattleStats();
 		// the coached pokemon strikes back
 		effect = pokedex[opponent.index - 1].type[rand()%(pokedex[opponent.index - 1].type.size())];
@@ -636,18 +698,20 @@ void Player::CoachBattle()
 		special_attack = abilities(7);
 		special_attack2 = abilities(7);
 		
-		printf("\033c");
+		std::cout << clearTerminal;
 		// pokemon got defeated
 		if (fighter->hp_left > fighter->hp || fighter->hp_left == 0)
 		{
 			fighter->hp_left = 1;
 			outcome = failure;
-			cout << "   Your pokemon: ";
+			std::cout << color("Your pokemon: ", BrightWhite);
 			fighter->BattleStats();
-			cout << "   Coached pokemon: ";
+			std::cout << color("Coached pokemon: ", BrightWhite);
 			opponent.BattleStats();
-			cout << endl << "------> Oh no! Your pokemon got defeated!" << endl;
-			cout << "You receive 1 exp, your pokemon receives 5 exp and 1 CP." << endl;
+			std::cout << std::endl << color("Oh no! Your pokemon got defeated!", BrightRed) << std::endl
+				<< color("You receive ", BrightWhite) << color("1 exp", Blue)
+				<< color(", your pokemon receives ", BrightWhite) << color("5 exp", BrightBlack)
+				<< color(" and ", BrightWhite) << color("1 CP", Blue) << color(".", BrightWhite) << std::endl;
 			exp += 1;
 			fighter->cp += 1;
 			fighter->exp += 5;
@@ -656,109 +720,129 @@ void Player::CoachBattle()
 		}
 	}
 }
+sleep(3);
 }
 
 // method activating game module: finding a treasure
 void Player::Treasure()
 {
-	printf("\033c");
+	std::cout << clearTerminal;
 	// there are different chances of encountering some treasures
 	int lot = rand()%100;
 	if (lot < 5)
 	{
-		cout << "------> You found a pokemon in the cage! Poor thing!" << endl;
+		std::cout << color("You found a pokemon in the cage! Poor thing!", BrightGreen) << std::endl;
 		Pokemon found(exp);
 		pokemons.push_back(found);
 		pokeCaught[found.index-1] = true;
 	}
 	else if (lot < 30)
 	{
-		cout << "------> You found a chest with some stuff!" << endl;
+		std::cout << color("You found a chest with some stuff!", BrightGreen) << std::endl;
 		int amount = rand()%3 + 1;
 		for (int i = 0; i < amount/2; i++)
 		{
 			Potion pot;
-			cout << "Found " << pot.ShowKind() << " " << pot.ShowPoints() << endl;
+			std::cout << color("Found ", BrightWhite) << pot.ShowKind() 
+				<< color(" " + std::to_string(pot.ShowPoints()), BrightWhite) << std::endl;
 			potions.push_back(pot);
 		}
 		if (lot < 50)
 		{
 			unsigned int c = rand()%21 * 10;
-			cout << "Found " << c << "gold" << endl;
+			std::cout << color("Found ", BrightWhite) 
+				<< color(std::to_string(c) + " gold", BrightYellow) << std::endl;
 			gold += c;
 		}
 	}
 	else
 	{
-		cout << "------> You encountered some experienced trainer who teached you some helpful techniques!" << endl;
-		cout << "------> You receive 100 exp.";
+		std::cout << color("You encountered some experienced trainer who teached you some helpful techniques!", BrightGreen) << std::endl
+			<< color("You receive 100 exp.", BrightGreen);
 		exp += 100;
 	}
-	
+	std::cout << std::endl;
+	sleep(3);
 }
 
 // method activating game module: encountering a marchant
 void Player::Marchant()
 {
-	printf("\033c");
-	cout << "------> You've encountered a marchant!" << endl;
+	std::cout << clearTerminal;
 	// generating the set of items and pokemons (inventory of the marchant)
-	vector <Potion> marchant_pot;
+	std::vector <Potion> marchant_pot;
 	for (int i = 0; i < 6; i++)
 		marchant_pot.push_back(Potion());
 	int lot = rand()%3;
-	vector <Pokemon> marchant_pok;
+	std::vector <Pokemon> marchant_pok;
 	for (int i = 0; i < lot; i++)
 		marchant_pok.push_back(Pokemon(exp));
 	// dispaying the inventory of the marchant
 	//transaction module
-	string choice;
+	std::string choice;
 	while (true)
 	{
-		cout << "----> What you can buy from the marchant:" << endl;
-		for (int i = 0; i < marchant_pot.size(); i++)
-			cout << i+1 << " " << marchant_pot[i].ShowKind() << " " << marchant_pot[i].ShowPoints() << " " << marchant_pot[i].ShowPrice() << " gold" << endl;
-		for (int i = 0; i < marchant_pok.size(); i++)
-			cout << i+marchant_pot.size()+1 << ". Mystery pokemon " << marchant_pok[i].ShowPrice() << " gold" << endl;
 		do
 		{
-			cout << "----> What would you like to do?" << endl;
-			cout << "SP - Sell pokemon   ST - Sell potion   B - Buy   Q - Quit" << endl;
-			cin >> choice;
-			printf("\033c");
-		} while (choice != "sp" && choice != "st" && choice != "b" && choice != "q");
-		if (choice == "sp") {
+			ShowStats();
+			std::cout << std::endl << color("You've encountered a marchant!", BrightWhite) << std::endl
+				<< color("What you can buy from the marchant:", BrightWhite) << std::endl;
+			for (int i = 0; i < marchant_pot.size(); i++)
+				std::cout << color(std::to_string(i + 1), BrightWhite) << " " 
+					<< marchant_pot[i].ShowKind() << " " 
+					<< color(std::to_string(marchant_pot[i].ShowPoints()), BrightWhite) << " " 
+					<< color(std::to_string(marchant_pot[i].ShowPrice()) + " gold", BrightYellow) << std::endl;
+			for (int i = 0; i < marchant_pok.size(); i++)
+				std::cout << color(std::to_string(i + marchant_pot.size() + 1) + ". Mystery pokemon ", BrightWhite) 
+				<< color(std::to_string(marchant_pok[i].ShowPrice()) + " gold", BrightYellow) << std::endl;
+			std::cout << color("What would you like to do?", BrightWhite) << std::endl
+				<< color("SP: Sell pokemon   ST: Sell potion   B: Buy   Q: Quit", BrightWhite) << std::endl;
+			std::cin >> choice;
+			std::cout << clearTerminal;
+		} while (choice != "sp" && choice != "SP" && choice != "st" && choice != "ST" 
+			&& choice != "b" && choice != "B" && choice != "q" && choice != "Q");
+		if (choice == "sp" || choice == "SP") {
 			if (pokemons.size() > 1)
 				SellPokemon();
 			else
-				cout << endl << "[!!!] You have only one pokemon!" << endl;
+				std::cout << color("[!!!] You have only one pokemon!", Red) << std::endl;
 		}
-		else if (choice == "st") {
+		else if (choice == "st" || choice == "ST") {
 			if (potions.size() > 0)
 				SellPotion();
 			else 
-				cout << endl << "[!!!] You don't have any potions yet!" << endl;
+				std::cout << color("[!!!] You don't have any potions yet!", Red) << std::endl;
 		}
-		else if (choice == "b")
+		else if (choice == "b" || choice == "B")
 		{
-			string bought;
+			std::string bought;
 			try
 			{
 				do 
 				{
-					cout << "------> Choose item from the marchant to buy or 'Q' to quit." << endl;;
-					cin >> bought;
-					printf("\033c");
-					if (choice == "q" || std::stoi(bought)) break;
-					else cout << "[!!!] Invalid input, try again." << endl;
-				} while (std::stoi(bought) > marchant_pot.size() + marchant_pok.size()&& choice != "q");
+					ShowStats();
+					std::cout << color("What you can buy from the marchant:", BrightWhite) << std::endl;
+					for (int i = 0; i < marchant_pot.size(); i++)
+						std::cout << color(std::to_string(i + 1), BrightWhite) << " "
+						<< marchant_pot[i].ShowKind() << " "
+						<< color(std::to_string(marchant_pot[i].ShowPoints()), BrightWhite) << " "
+						<< color(std::to_string(marchant_pot[i].ShowPrice()) + " gold", BrightYellow) << std::endl;
+					for (int i = 0; i < marchant_pok.size(); i++)
+						std::cout << color(std::to_string(i + marchant_pot.size() + 1) + ". Mystery pokemon ", BrightWhite)
+						<< color(std::to_string(marchant_pok[i].ShowPrice()) + " gold", BrightYellow) << std::endl;
+					std::cout << color("Choose item from the marchant to buy or 'Q' to quit.", BrightWhite) << std::endl;
+					std::cin >> bought;
+					std::cout << clearTerminal;
+					if (choice == "q" || choice =="Q" || std::stoi(bought)) break;
+					else std::cout << invalidInput << std::endl;
+				} while (std::stoi(bought) > marchant_pot.size() + marchant_pok.size() && choice != "q" && choice != "Q");
 			}
-			catch (const exception &e)
+			catch (const std::exception &e)
 			{
-				if (choice != "q")
-					cout << endl << "[!!!] Invalid input, try again." << endl;
+				if (choice != "q" && choice != "Q")
+					std::cout << std::endl << invalidInput << std::endl;
 			}
-			if (bought == "q") continue;
+			if (bought == "q" || bought == "Q") continue;
 			else if (std::stoi(bought) > marchant_pot.size())
 			{
 				Buy(marchant_pok[std::stoi(bought)-marchant_pot.size()-1]);
@@ -770,147 +854,151 @@ void Player::Marchant()
 				marchant_pot.erase(marchant_pot.begin() + std::stoi(bought) - 1);
 			}	
 		}
-		else if (choice == "q")
+		else if (choice == "q" || choice == "Q")
 			break;
 	}
-	cout << "----> Thank you for your transactions!" << endl;
+	std::cout << color("Thank you for your transactions!", BrightWhite) << std::endl;
 }
 
 // method activating game module: healing
 void Player::Healing()
 {
 	if (potions.size() <= 0) {
-		cout << endl << "[!!!] You don't have any potions yet!" << endl;
+		std::cout << color("[!!!] You don't have any potions yet!", Red) << std::endl;
 		return;
-	}
-	cout << endl << "------> Your pokemons : " << endl;
-	for (int i = 0; i < pokemons.size(); i++)
-	{
-		cout << i+1 << ". ";
-		pokemons[i].BattleStats();
-	}
-	cout << endl << "------> Your potions : " << endl;
-	for (int i = 0; i < potions.size(); i++)
-	{
-		cout << i+1 << ". " << potions[i].ShowKind() << " +" << potions[i].ShowPoints() << "  ";
-		if (i%5 == 4) cout << endl;
 	}
 	while (true)
 	{
-		string choice;
+		std::string choice;
 		do
 		{
 			/// displaying the eq
-			cout << "What would you like to do?" << endl;
-			cout << "P - use potions   Q - quit" << endl;
-			cin >> choice;
-			printf("\033c");
-		} while (choice != "p" && choice != "q");
+			std::cout << color("Your pokemons : ", BrightWhite) << std::endl;
+			for (int i = 0; i < pokemons.size(); i++)
+			{
+				std::cout << color(std::to_string(i + 1) + ". ", BrightWhite);
+				pokemons[i].BattleStats();
+			}
+			std::cout << std::endl << color("Your potions : ", BrightWhite) << std::endl;
+			for (int i = 0; i < potions.size(); i++)
+			{
+				std::cout << color(std::to_string(i + 1) + ". ", BrightWhite) 
+					<< potions[i].ShowKind() 
+					<< color(" +" + std::to_string(potions[i].ShowPoints()) + "   ", BrightWhite);
+				if (i % 5 == 4) std::cout << std::endl;
+			}
+			std::cout << std::endl << std::endl << color("What would you like to do?", BrightWhite) << std::endl;
+			std::cout << color("P - use potions   Q - quit", BrightWhite) << std::endl;
+			std::cin >> choice;
+			std::cout << clearTerminal;
+		} while (choice != "p" && choice != "P" && choice != "q" && choice != "Q");
 		
-		if (choice == "p") // healing/buffing
+		if (choice == "p" || choice == "P") // healing/buffing
 		{
 			int choice_pok, choice_pot;
 			try
 			{
 				do
 				{
-					cout << "------> Choose the pokemon: ";
-					cin >> choice_pok;
-					printf("\033c");
-					if (!cin.good()) 
+					std::cout << color("Your pokemons : ", BrightWhite) << std::endl;
+					for (int i = 0; i < pokemons.size(); i++)
 					{
-						cout << "[!!!] Invalid input, try again." << endl;
-						cin.clear();
-						cin.ignore(1000, '\n');
+						std::cout << color(std::to_string(i + 1) + ". ", BrightWhite);
+						pokemons[i].BattleStats();
+					}
+					std::cout << std::endl << color("Choose the pokemon: ", BrightWhite);
+					std::cin >> choice_pok;
+					std::cout << clearTerminal;
+					if (!std::cin.good()) 
+					{
+						std::cout << invalidInput << std::endl;
+						std::cin.clear();
+						std::cin.ignore(1000, '\n');
 						choice_pok = -1;
 					}	
 				} while (choice_pok > pokemons.size() || choice_pok <= 0);
 			}
-			catch (const exception &e)
+			catch (const std::exception &e)
 			{
-				cout << "[!!!] Invalid input, try again." << endl;
+				std::cout << invalidInput << std::endl;
 			}
 			try
 			{
 				do
 				{
-					cout << "Choose the potion: ";
-					cin >> choice_pot;
-					printf("\033c");
-					if (!cin.good()) 
+					std::cout << color("Your potions : ", BrightWhite) << std::endl;
+					for (int i = 0; i < potions.size(); i++)
 					{
-						cout << "[!!!] Invalid input, try again." << endl;
-						cin.clear();
-						cin.ignore(1000, '\n');
+						std::cout << color(std::to_string(i + 1) + ". ", BrightWhite)
+							<< potions[i].ShowKind()
+							<< color(" +" + std::to_string(potions[i].ShowPoints()) + "   ", BrightWhite);
+						if (i % 5 == 4) std::cout << std::endl;
+					}
+					std::cout << std::endl << color("Choose the potion: ", BrightWhite);
+					std::cin >> choice_pot;
+					std::cout << clearTerminal;
+					if (!std::cin.good()) 
+					{
+						std::cout << invalidInput << std::endl;
+						std::cin.clear();
+						std::cin.ignore(1000, '\n');
 						choice_pot = -1;
 					}	
 				} while (choice_pot > potions.size() || choice_pot <= 0);
 			}
-			catch (const exception &e)
+			catch (const std::exception &e)
 			{
-				cout << "[!!!] Invalid input, try again." << endl;
+				std::cout << invalidInput << std::endl;
 			}
 			pokemons[choice_pok - 1].TakePotion(potions[choice_pot - 1]);
 			potions.erase(potions.begin() + choice_pot - 1);
-			// displaying the eq again
-			cout << endl << "------> Your pokemons : " << endl;
-			for (int i = 0; i < pokemons.size(); i++)
-			{
-				cout << i+1 << ". ";
-				pokemons[i].BattleStats();
-			}
-			cout << endl << "------> Your potions : " << endl;
-			for (int i = 0; i < potions.size(); i++)
-			{
-				cout << i+1 << ". " << potions[i].ShowKind() << " +" << potions[i].ShowPoints() << "  ";
-				if (i%5 == 4) cout << endl;
-			}
 		}
-		else if (choice == "q") break;
+		else if (choice == "q" || choice == "Q") break;
 	}
 }
 
 // method activating game module: showing already caught pokemons
 void Player::ShowCaught()
 {
-	cout << "------> You already caught:" << endl;
+	std::cout << color("You already caught:", BrightWhite) << std::endl;
 	int count = 0;
 	for (int i = 0; i < 151; i++)
 	{
 		if (pokeCaught[i]) 
 		{
-			cout << pokedex[i].name << ", ";
+			std::cout << color(pokedex[i].name + ", ", BrightWhite);
 			if (++count%8 == 0)
-				cout << endl;
+				std::cout << std::endl;
 		}
 	}	
-	cout << endl << "------> You still need to catch " << 151 - count << " species." << endl;
+	std::cout << std::endl << color("You still need to catch ", BrightWhite) 
+		<< color(std::to_string(151 - count), Green) << color(" species.", BrightWhite) << std::endl;
 }
 
 // method to write the records to the record file
 void Player::writeRecords()
 {
-	ofstream file;
-	file.open("records.txt", ofstream::out | ofstream::trunc);
+	std::ofstream file;
+	file.open("records.txt", std::ofstream::out | std::ofstream::trunc);
 
 	// writing the name
-    file << "name: " << name << endl;
+    file << "name: " << name << std::endl;
 	// writing the exp
-	file << "exp: " << exp << endl;
+	file << "exp: " << exp << std::endl;
 	// writing the gold
-	file << "gold: " << gold << endl;
+	file << "gold: " << gold << std::endl;
 	// writing the potions
 	file << "potions: ";
 	for (int i = 0; i < potions.size(); i++)
 	{
-		if (i%8 == 0) cout << endl;
+		if (i%8 == 0) std::cout << std::endl;
 		file << "{";
 		potions[i].ShowKind() == "Buff" ? file << "1," : file << "0,";
 		file << potions[i].ShowPoints() << "," << potions[i].ShowPrice() << "}";
 		
 	}
 	// writing the pokemons
-	file << endl << "pokemons: " << endl;
+	file << std::endl << "pokemons: " << std::endl;
 	for (int i = 0; i < pokemons.size(); i++)
 	{
 		file << "{" << pokemons[i].index << "," << pokemons[i].cp << "," << pokemons[i].hp <<
@@ -922,17 +1010,17 @@ void Player::writeRecords()
 		}
 		file << ",";
 		pokemons[i].shield ? file << "1}" : file << "0}";
-		file << endl;
+		file << std::endl;
 	}
 	// writing the pocecaughts
-	file << "pokecaught: " << endl;
+	file << "pokecaught: " << std::endl;
 	for (int i = 0; i < 151; i++)
 	{
 		pokeCaught[i] ? file << "1" : file << "0";
 	}
-	file << endl;
+	file << std::endl;
     // Close the file
     file.close();
-    cout << "------> Your records are saved successfully." << endl;
+    std::cout << color("Your records were saved successfully.", BrightWhite) << std::endl;
 
 }

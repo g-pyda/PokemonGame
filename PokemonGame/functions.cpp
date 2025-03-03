@@ -10,7 +10,7 @@ void Attack(Pokemon* fighter, Pokemon* opponent, types effectA)
 	// attack of the player
 	hp_taken = 5 + fighter->cp / 200;
 	// usage of special abilities
-	cout << endl << pokedex[fighter->index - 1].name << " attacks " << pokedex[opponent->index - 1].name << " with " << types_s[effectA] << " attack." << endl;
+	std::cout << std::endl << pokedex[fighter->index - 1].name << " attacks " << pokedex[opponent->index - 1].name << " with " << types_s[effectA] << " attack." << std::endl;
 	for (auto ab : fighter->ability)
 	{
 		switch (ab)
@@ -19,7 +19,7 @@ void Attack(Pokemon* fighter, Pokemon* opponent, types effectA)
 			fighter->hp_left += 3;
 			if (fighter->hp_left > fighter->hp)
 			{
-				cout << pokedex[fighter->index - 1].name << " used healing!" << endl;
+				std::cout << pokedex[fighter->index - 1].name << " used healing!" << std::endl;
 				fighter->hp_left = fighter->hp;
 				special_attack = healing;
 			}
@@ -27,7 +27,7 @@ void Attack(Pokemon* fighter, Pokemon* opponent, types effectA)
 		case spattack:
 			if (rand() % 100 < 50 * (fighter->hp_left / fighter->hp))
 			{
-				cout << pokedex[fighter->index - 1].name << " used special attack!" << endl;
+				std::cout << pokedex[fighter->index - 1].name << " used special attack!" << std::endl;
 				hp_taken *= 1.5;
 				special_attack = spattack;
 			}
@@ -35,7 +35,7 @@ void Attack(Pokemon* fighter, Pokemon* opponent, types effectA)
 		case sbreaker:
 			if (rand() % 100 < 50 * (fighter->cp * 0.01 / fighter->hp))
 			{
-				cout << pokedex[fighter->index - 1].name << " used shield breaker!" << endl;
+				std::cout << pokedex[fighter->index - 1].name << " used shield breaker!" << std::endl;
 				opponent->shield = false;
 				special_attack = sbreaker;
 			}
@@ -43,7 +43,7 @@ void Attack(Pokemon* fighter, Pokemon* opponent, types effectA)
 		case shield:
 			if (rand() % 100 < 50 * (fighter->pp / fighter->hp_left))
 			{
-				cout << pokedex[fighter->index - 1].name << " used shield!" << endl;
+				std::cout << pokedex[fighter->index - 1].name << " used shield!" << std::endl;
 				special_attack = shield;
 				fighter->shield = true;
 			}
@@ -68,7 +68,7 @@ void Attack(Pokemon* fighter, Pokemon* opponent, types effectA)
 			if (rand() % 100 < 50 * (opponent->pp / opponent->hp))
 			{
 				special_attack = dodge;
-				cout << "Attack dodged by " << pokedex[opponent->index - 1].name << "!" << endl;
+				std::cout << "Attack dodged by " << pokedex[opponent->index - 1].name << "!" << std::endl;
 				hp_taken = 0;
 			}
 			break;
@@ -76,7 +76,7 @@ void Attack(Pokemon* fighter, Pokemon* opponent, types effectA)
 			if (rand() % 100 < 50 * (0.01 * opponent->cp / opponent->pp))
 			{
 				special_attack = reemit;
-				cout << "Attack reemited by " << pokedex[opponent->index - 1].name << "!" << endl;
+				std::cout << "Attack reemited by " << pokedex[opponent->index - 1].name << "!" << std::endl;
 				fighter->hp_left -= 5 * eff;
 				hp_taken = 0;
 			}
@@ -85,25 +85,25 @@ void Attack(Pokemon* fighter, Pokemon* opponent, types effectA)
 	}
 	if (opponent->shield)
 	{
-		cout << "Shield used by " << pokedex[opponent->index - 1].name << "!" << endl;
+		std::cout << "Shield used by " << pokedex[opponent->index - 1].name << "!" << std::endl;
 		hp_taken *= 0.25;
 		opponent->shield = false;
 	}
-	cout << hp_taken * eff << " HP were taken from " << pokedex[opponent->index - 1].name << endl << endl;
+	std::cout << hp_taken * eff << " HP were taken from " << pokedex[opponent->index - 1].name << std::endl << std::endl;
 	// applying the change of HP
 	opponent->hp_left -= hp_taken * eff;
 }
 
 // function to read the records from the previous game
-vector <string> readRecords()
+std::vector <std::string> readRecords()
 {
-	ifstream records;
+	std::ifstream records;
 	records.open("records.txt");
-	vector <string> record_lines;
-	string temp;
+	std::vector <std::string> record_lines;
+	std::string temp;
 	int i = 0;
 	do {
-		getline(records, temp); //filling our string vector with the content of ith line of .txt file
+		getline(records, temp); //filling our std::string std::vector with the content of ith line of .txt file
 		if (records.eof()) break;
 		record_lines.push_back(temp);
 	} while (!temp.empty() && ++i);
@@ -111,10 +111,10 @@ vector <string> readRecords()
 }
 
 // function to read name of the player from the text file
-string getName(string line)
+std::string getName(std::string line)
 {
 	bool space = false;
-	string name = "";
+	std::string name = "";
 	for (int j = 0; j < line.size(); j++)
 	{
 		if (line[j] == ' ')
@@ -128,10 +128,10 @@ string getName(string line)
 }
 
 // function to read exp of the player from the text file
-int getExp(string line)
+int getExp(std::string line)
 {
 	bool space = false;
-	string exp = "";
+	std::string exp = "";
 	for (int j = 0; j < line.size(); j++)
 	{
 		if (line[j] == ' ')
@@ -145,10 +145,10 @@ int getExp(string line)
 }
 
 // function to read gold of the player from the text file
-int getGold(string line)
+int getGold(std::string line)
 {
 	bool space = false;
-	string gold = "";
+	std::string gold = "";
 	for (int j = 0; j < line.size(); j++)
 	{
 		if (line[j] == ' ')
@@ -162,15 +162,15 @@ int getGold(string line)
 }
 
 // function to read pokemons of the player from the text file
-vector <Pokemon> getPokemons(vector <string> lines)
+std::vector <Pokemon> getPokemons(std::vector <std::string> lines)
 {
-	vector <Pokemon> result;
+	std::vector <Pokemon> result;
 	bool parenthesis = false;
-	string pokedata;
-	// array of string representing the elements of pokemon class
+	std::string pokedata;
+	// array of std::string representing the elements of pokemon class
 	// 0 - index, 1 - cp, 2 - hp, 3 - hp_left
 	// 4 - pp, 5 - exp, 6 - ability, 7 - shield
-	string elements[8] = { "","","","","","","","" };
+	std::string elements[8] = { "","","","","","","","" };
 	for (int i = 0; i < lines.size(); i++)
 	{
 		for (int j = 0; j < lines[i].size(); j++)
@@ -193,7 +193,7 @@ vector <Pokemon> getPokemons(vector <string> lines)
 					}
 					elements[elem] += pokedata[k];
 				}
-				// creating the pokemon containing this data and adding it to the result vector
+				// creating the pokemon containing this data and adding it to the result std::vector
 				result.push_back(Pokemon(elements));
 
 				for (int k = 0; k < 8; k++)
@@ -208,14 +208,14 @@ vector <Pokemon> getPokemons(vector <string> lines)
 }
 
 // function to read potions of the player from the text file
-vector <Potion> getPotions(vector <string> lines)
+std::vector <Potion> getPotions(std::vector <std::string> lines)
 {
-	vector <Potion> result;
+	std::vector <Potion> result;
 	bool parenthesis = false;
-	string potionData;
-	// array of string representing the elements of potion class
+	std::string potionData;
+	// array of std::string representing the elements of potion class
 	// 0 - type, 1 - points, 2 - price
-	string elements[3] = { "","","" };
+	std::string elements[3] = { "","","" };
 	for (int i = 0; i < lines.size(); i++)
 	{
 		for (int j = 0; j < lines[i].size(); j++)
@@ -238,7 +238,7 @@ vector <Potion> getPotions(vector <string> lines)
 					}
 					elements[elem] += potionData[k];
 				}
-				// creating the potion containing this data and adding it to the result vector
+				// creating the potion containing this data and adding it to the result std::vector
 				result.push_back(Potion(elements));
 				for (int k = 0; k < 3; k++)
 					elements[k] = "";
@@ -252,13 +252,21 @@ vector <Potion> getPotions(vector <string> lines)
 }
 
 // function to read status of caught pokemons
-vector <bool> getPCaught(string line)
+std::vector <bool> getPCaught(std::string line)
 {
-	vector <bool> result;
+	std::vector <bool> result;
 	for (int i = 0; i < line.size(); i++)
 	{
 		if (line[i] == '0') result.push_back(false);
 		else result.push_back(true);
 	}
 	return result;
+}
+
+std::string color(std::string text, ColorName color, bool background)
+{
+	int b = 0;
+	if (background) b = 1;
+
+	return colorCodes[color][b] + text + colorEnd;
 }

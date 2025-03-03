@@ -13,18 +13,20 @@ int main(int argc, char** argv)
 {
 	// dispaying the information about the game and options
 	int choice;
-	cout << "------> \x1B[31mWelcome to the Pokemon Game!\033[0m" << endl << "Choose option:" << endl;
+	std::cout << color("Welcome to the Pokemon Game!", BrightWhite) << std::endl << std::endl;
 	do
 	{
-		cout << "0: New Game" << endl;
-		cout << "1: Resume Game" << endl;
-		cout << "2: Quit" << endl;
-		cin >> choice;
-		printf("\033c");
-		if (!cin.good()) {
-			cout << "[!!!] Invalid input, try again." << endl;
-			cin.clear();
-			cin.ignore(1000, '\n');
+		std::cout << color("Choose option:", BrightWhite) << std::endl
+			<< color("0: New Game", BrightWhite) << std::endl
+			<< color("1: Resume Game", BrightWhite) << std::endl
+			<< color("2: Quit", BrightWhite) << std::endl;
+
+		std::cin >> choice;
+		std::cout << clearTerminal;
+		if (!std::cin.good()) {
+			std::cout << invalidInput << std::endl << std::endl;
+			std::cin.clear();
+			std::cin.ignore(1000, '\n');
 			choice = -1;
 		}
 	} while (choice != 0 && choice != 1 && choice != 2);
@@ -37,14 +39,14 @@ int main(int argc, char** argv)
 		// player chosen from the records
 		// reading the data of the player from the file
 		bool success = true;
-		vector <string> recordLines;
+		std::vector <std::string> recordLines;
 		try
 		{
 			recordLines = readRecords();
 		}
-		catch (const exception& e)
+		catch (const std::exception& e)
 		{
-			cout << endl << "----> The file with records doesn't exist." << endl;
+			std::cout << color("The file with records doesn't exist.", Yellow) << std::endl << std::endl;
 			success = false;
 		}
 		if (recordLines.empty()) success = false;
@@ -56,30 +58,30 @@ int main(int argc, char** argv)
 		}
 		if (success)
 		{
-			string name = getName(recordLines[0]);
+			std::string name = getName(recordLines[0]);
 			int exp = getExp(recordLines[1]);
 			int gold = getGold(recordLines[2]);
-			vector <string> temp;
-			int i = 4;
+			std::vector <std::string> temp;
+			int i = 3;
 			for (;; i++)
 			{
-				if (recordLines[i].find("pokemons:") == std::string::npos)
+				if (recordLines[i].find("pokemons:") != std::string::npos)
 					break;
 				temp.push_back(recordLines[i]);
 			}
 			i--;
-			vector <Potion> potions = getPotions(temp);
+			std::vector <Potion> potions = getPotions(temp);
 			temp.clear();
 			for (i++; i < recordLines.size() - 2; i++)
 			{
 				temp.push_back(recordLines[i]);
 			}
-			vector <Pokemon> pokemons = getPokemons(temp);
-			vector <bool> pokeCaught = getPCaught(recordLines[recordLines.size() - 1]);
+			std::vector <Pokemon> pokemons = getPokemons(temp);
+			std::vector <bool> pokeCaught = getPCaught(recordLines[recordLines.size() - 1]);
 			player = new Player(name, exp, gold, potions, pokemons, pokeCaught);
 			break;
 		}
-		else cout << endl << "----> The records weren't read so you have to start a new game." << endl;
+		else std::cout << std::endl << color("The records weren't read so you have to start a new game.",Yellow) << std::endl;
 	}
 	case 0:
 		// new player created
@@ -90,8 +92,9 @@ int main(int argc, char** argv)
 		return 0;
 	}
 	// main game module
-	printf("\033c");
-	cout << "------> Hello, " << player->ShowName() << endl << "------> LET'S CATCH THEM ALL" << endl;
+	std::cout << clearTerminal;
+	std::cout << color("Hello, ", BrightWhite) << color(player->ShowName(), BrightBlue) << std::endl << color("LET'S CATCH THEM ALL", BrightWhite) << std::endl;
+	sleep(1);
 	// lottery of events
 	int event = 16;
 	while (!player->CaughtAll())
@@ -103,28 +106,29 @@ int main(int argc, char** argv)
 		}
 		else if (choice == 1 || event != 16)// not the first iteration
 		{
-			player->ShowStats();
 			do
 			{
-				cout << endl << "------> What action would you like to make?" << endl;
-				cout << "1 - continue the journey!" << endl;
-				cout << "2 - use your potions on pokemons." << endl;
-				cout << "3 - save your statistics." << endl;
-				cout << "4 - see, which pokemon species you've already caught" << endl;
-				cout << "0 - exit the game. WARNING! This action doesn't save your progress!" << endl;
-				cin >> choice;
-				printf("\033c");
-				if (!cin.good()) {
-					cout << "[!!!] Invalid input, try again." << endl;
-					cin.clear();
-					cin.ignore(1000, '\n');
+				std::cout << clearTerminal;
+				player->ShowStats();
+				std::cout << std::endl << color("What action would you like to make?", BrightWhite) << std::endl << std::endl
+					<< color("1: continue the journey!", BrightGreen) << std::endl
+					<< color("2: use your potions on pokemons.", BrightMagenta) << std::endl
+					<< color("3: save your statistics.", Blue) << std::endl
+					<< color("4: see, which pokemon species you've already caught", Green) << std::endl
+					<< color("0: exit the game. WARNING! This action doesn't save your progress!", White) << std::endl;
+				std::cin >> choice;
+				std::cout << clearTerminal;
+				if (!std::cin.good()) {
+					std::cout << invalidInput << std::endl;
+					std::cin.clear();
+					std::cin.ignore(1000, '\n');
 					choice = -1;
 				}
 			} while (choice != 0 && choice != 1 && choice != 2 && choice != 3 && choice != 4);
 			switch (choice)
 			{
 			case 0: // exit from the game
-				cout << "------> Thank you for playing!";
+				std::cout << color("Thank you for playing!",Yellow) << std::endl;
 				delete player;
 				return 0;
 			case 1: // generation of the next event
@@ -146,16 +150,17 @@ int main(int argc, char** argv)
 			player->WildBattle();
 			if (player->ShowPokemonNR() <= 0) {
 				do {
-					cout << "------> Unfortunately you lost all of your pokemons! Better luck next time!" << endl;
-					cout << "What action would you like to make?" << endl;
-					cout << "1 - delete your current save to start over." << endl;
-					cout << "2 - exit the game without saving." << endl;
-					cin >> choice;
-					printf("\033c");
-					if (!cin.good()) {
-						cout << "[!!!] Invalid input, try again." << endl;
-						cin.clear();
-						cin.ignore(1000, '\n');
+					std::cout << color("Unfortunately you lost all of your pokemons! Better luck next time!", Yellow) << std::endl << std::endl;
+					sleep(3);
+					std::cout << color("What action would you like to make?", BrightWhite) << std::endl
+						<< color("1: delete your current save to start over.", BrightWhite) << std::endl
+						<< color("2: exit the game without saving.", BrightWhite) << std::endl;
+					std::cin >> choice;
+					std::cout << clearTerminal;
+					if (!std::cin.good()) {
+						std::cout << invalidInput << std::endl;
+						std::cin.clear();
+						std::cin.ignore(1000, '\n');
 						choice = -1;
 					}
 				} while (choice != 1 && choice != 2);
@@ -163,7 +168,7 @@ int main(int argc, char** argv)
 				case 1:
 					remove("records.txt");
 				case 2:
-					cout << "------> Thank you for playing!";
+					std::cout << color("Thank you for playing!", Yellow) << std::endl;
 					delete player;
 					return 0;
 				}
@@ -174,6 +179,7 @@ int main(int argc, char** argv)
 		else player->Marchant(); // marchant found		
 	}
 	delete player;
-	cout << "------> Congratulations! You caught them all!" << endl;
+	std::cout << color("Congratulations! You caught them all!", BrightGreen) << std::endl;
+	sleep(3);
 	return 0;
 }

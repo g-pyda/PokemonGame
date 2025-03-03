@@ -1,6 +1,7 @@
 #include "constants.h"
 #include <string>
 #include "Potion.h"
+#include "functions.h"
 
 // default constructor used while rendering belongings of the marchant/stuff in the treasure
 Potion::Potion()
@@ -57,9 +58,9 @@ Potion::Potion()
 }
 
 // constructor used while generating potions from the records
-Potion::Potion(string elements[3])
+Potion::Potion(std::string elements[3])
 {
-	// array of string representing the elements of potion class
+	// array of std::string representing the elements of potion class
 	// 0 - type, 1 - points, 2 - price
 	if (elements[0] == "0") kind = false;
 	else kind = true;
@@ -68,10 +69,10 @@ Potion::Potion(string elements[3])
 }
 
 // methods to show the kind of potion
-string Potion::ShowKind() const
+std::string Potion::ShowKind() const
 {
-	if (kind) return "Buff";
-	else return "Healing";	
+	if (kind) return color("Buff",Blue);
+	else return color("Healing",BrightMagenta);	
 }
 
 // method to show the points gained from the potion 

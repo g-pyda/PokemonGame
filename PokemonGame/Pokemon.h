@@ -20,8 +20,8 @@ private:
 	unsigned int pp;
 	// Experience Points that depict when the pokemon will evolve
 	unsigned int exp;
-	// vector of special abilities obtained during evolution
-	vector <abilities> ability;
+	// std::vector of special abilities obtained during evolution
+	std::vector <abilities> ability;
 	// information about usage of shield during fight
 	bool shield;
 	// method to evolve the pokemon
@@ -33,7 +33,7 @@ public:
 	// default constructor (used while spawning coached/wild/marchant/hostile pokemon)
 	Pokemon(unsigned int pl_exp);
 	// constructor used while reading the data from the records
-	Pokemon(string elements[8]);
+	Pokemon(std::string elements[8]);
 	// method to use while using potions
 	void TakePotion(Potion pot);
 	// method to show info about the pokemon during the battle
