@@ -3,9 +3,10 @@
 #include "constants.h"
 #include "Pokemon.h"
 #include "Potion.h"
+#include <string>
 
 // function that represents attack of the pokemon on the other one
-void Attack(Pokemon* fighter, Pokemon* opponent, types effectA);
+std::string Attack(Pokemon* fighter, Pokemon* opponent, types effectA);
 
 // function to read the records from the previous game
 std::vector <std::string> readRecords();

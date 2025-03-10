@@ -13,7 +13,7 @@ private:
 	// market price of the potion
 	unsigned short int price;
 public:
-	// default constructor used while rendering belongings of the marchant/stuff in the treasure
+	// default constructor used while rendering belongings of the merchant/stuff in the treasure
 	Potion();
 	// constructor used while generating potions from the records
 	Potion(std::string elements[3]);

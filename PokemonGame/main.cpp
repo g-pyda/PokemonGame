@@ -176,7 +176,7 @@ int main(int argc, char** argv)
 		}
 		else if (event < 8) player->CoachBattle(); // battle with the coach
 		else if (event < 13) player->Treasure(); // treasure found
-		else player->Marchant(); // marchant found		
+		else player->Marchant(); // merchant found		
 	}
 	delete player;
 	std::cout << color("Congratulations! You caught them all!", BrightGreen) << std::endl;

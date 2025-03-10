@@ -2,6 +2,7 @@
 
 #include "constants.h"
 #include "Potion.h"
+#include <string>
 
 // class representing a pokemon 
 class Pokemon
@@ -28,9 +29,9 @@ private:
 	void Evolve();
 	friend class Player;
 	// friend function that represents attack of the pokemon on the other one
-	friend void Attack(Pokemon* fighter, Pokemon* opponent, types effectA);
+	friend std::string Attack(Pokemon* fighter, Pokemon* opponent, types effectA);
 public:
-	// default constructor (used while spawning coached/wild/marchant/hostile pokemon)
+	// default constructor (used while spawning coached/wild/merchant/hostile pokemon)
 	Pokemon(unsigned int pl_exp);
 	// constructor used while reading the data from the records
 	Pokemon(std::string elements[8]);

@@ -2,8 +2,10 @@
 #include <string>
 
 // function that represents attack of the pokemon on the other one
-void Attack(Pokemon* fighter, Pokemon* opponent, types effectA)
+std::string Attack(Pokemon* fighter, Pokemon* opponent, types effectA)
 {
+	std::string battleResult = "";
+
 	unsigned int hp_taken;
 	types effect = effectA;
 	abilities special_attack;
@@ -20,6 +22,7 @@ void Attack(Pokemon* fighter, Pokemon* opponent, types effectA)
 			if (fighter->hp_left > fighter->hp)
 			{
 				std::cout << pokedex[fighter->index - 1].name << " used healing!" << std::endl;
+				battleResult += "| " + pokedex[fighter->index - 1].name + " used healing ";
 				fighter->hp_left = fighter->hp;
 				special_attack = healing;
 			}
@@ -28,6 +31,7 @@ void Attack(Pokemon* fighter, Pokemon* opponent, types effectA)
 			if (rand() % 100 < 50 * (fighter->hp_left / fighter->hp))
 			{
 				std::cout << pokedex[fighter->index - 1].name << " used special attack!" << std::endl;
+				battleResult += "| " + pokedex[fighter->index - 1].name + " used special attack ";
 				hp_taken *= 1.5;
 				special_attack = spattack;
 			}
@@ -36,6 +40,7 @@ void Attack(Pokemon* fighter, Pokemon* opponent, types effectA)
 			if (rand() % 100 < 50 * (fighter->cp * 0.01 / fighter->hp))
 			{
 				std::cout << pokedex[fighter->index - 1].name << " used shield breaker!" << std::endl;
+				battleResult += "| " + pokedex[fighter->index - 1].name + " used shield breaker ";
 				opponent->shield = false;
 				special_attack = sbreaker;
 			}
@@ -43,7 +48,8 @@ void Attack(Pokemon* fighter, Pokemon* opponent, types effectA)
 		case shield:
 			if (rand() % 100 < 50 * (fighter->pp / fighter->hp_left))
 			{
-				std::cout << pokedex[fighter->index - 1].name << " used shield!" << std::endl;
+				std::cout << pokedex[fighter->index - 1].name << " created a shield!" << std::endl;
+				battleResult += "| " + pokedex[fighter->index - 1].name + " created a shield ";
 				special_attack = shield;
 				fighter->shield = true;
 			}
@@ -69,6 +75,7 @@ void Attack(Pokemon* fighter, Pokemon* opponent, types effectA)
 			{
 				special_attack = dodge;
 				std::cout << "Attack dodged by " << pokedex[opponent->index - 1].name << "!" << std::endl;
+				battleResult += "| Attack dodged ";
 				hp_taken = 0;
 			}
 			break;
@@ -77,6 +84,7 @@ void Attack(Pokemon* fighter, Pokemon* opponent, types effectA)
 			{
 				special_attack = reemit;
 				std::cout << "Attack reemited by " << pokedex[opponent->index - 1].name << "!" << std::endl;
+				battleResult += "| Attack reemited ";
 				fighter->hp_left -= 5 * eff;
 				hp_taken = 0;
 			}
@@ -86,12 +94,16 @@ void Attack(Pokemon* fighter, Pokemon* opponent, types effectA)
 	if (opponent->shield)
 	{
 		std::cout << "Shield used by " << pokedex[opponent->index - 1].name << "!" << std::endl;
+		battleResult += "| Used shield ";
 		hp_taken *= 0.25;
 		opponent->shield = false;
 	}
 	std::cout << hp_taken * eff << " HP were taken from " << pokedex[opponent->index - 1].name << std::endl << std::endl;
+	battleResult += "| " + std::to_string(hp_taken * eff) + " from " + pokedex[opponent->index - 1].name + " with " + types_s[effectA] + " attack ";
+
 	// applying the change of HP
 	opponent->hp_left -= hp_taken * eff;
+	return battleResult;
 }
 
 // function to read the records from the previous game

@@ -3,6 +3,8 @@
 #include "functions.h"
 #include <string>
 #include "Player.h"
+#include <iomanip>
+
 
 // default constructor of the player
 Player::Player()
@@ -182,7 +184,7 @@ void Player::SellPotion()
 	}
 }
 
-// method to buy an object/pokemon from the marchant
+// method to buy an object/pokemon from the merchant
 void Player::Buy(Potion pot)
 {
 	// deleting the coins and adding potion to the inventory
@@ -294,6 +296,7 @@ void Player::WildBattle()
 {
 	// spawning the random pokemon
 	Pokemon opponent(exp);
+	std::vector<std::string> battleHistory = {};
 	// decision if to take up a battle
 	std::string choice;
 	while (true)
@@ -358,7 +361,9 @@ void Player::WildBattle()
 				std::cout << color(std::to_string(i + 1) + ". ", BrightWhite) 
 					<< color(types_s[pokedex[fighter->index - 1].type[i]], (ColorName)typeColors[pokedex[fighter->index - 1].type[i]])
 					<< color(" attack.", BrightWhite) << std::endl;
-			
+			std::cout << std::endl << "Battle history:" << std::endl;
+			for (int i = 0; i < battleHistory.size(); i++)
+				std::cout << std::setprecision(1) << battleHistory[i] << std::endl;
 			std::cin >> choice_t;
 			std::cout << clearTerminal;
 			if (!std::cin.good()) {
@@ -376,9 +381,12 @@ void Player::WildBattle()
 		fighter->BattleStats();
 		std::cout << color("Wild pokemon: ", BrightWhite);
 		opponent.BattleStats();
-		Attack(fighter, &opponent, effect);
+		battleHistory.push_back(Attack(fighter, &opponent, effect));
 		special_attack = abilities(7);
 		special_attack2 = abilities(7);
+		std::cout << std::endl << "Battle history:" << std::endl;
+		for (int i = 0; i < battleHistory.size(); i++)
+			std::cout << std::setprecision(1) << battleHistory[i] << std::endl;
 		sleep(3);
 		std::cout << clearTerminal;
 		// checking if the wild pokemon still can fight
@@ -414,7 +422,10 @@ void Player::WildBattle()
 			<< color(" The wild pokemon is attacking!", BrightWhite) << std::endl;
 		// wild pokemon strikes back
 		effect = pokedex[opponent.index - 1].type[rand()%(pokedex[opponent.index - 1].type.size())];
-		Attack(&opponent, fighter, effect);
+		battleHistory.push_back(Attack(&opponent, fighter, effect));
+		std::cout << std::endl << "Battle history:" << std::endl;
+		for (int i = 0; i < battleHistory.size(); i++)
+			std::cout << std::setprecision(1) << battleHistory[i] << std::endl;
 		sleep(3);
 		std::cout << clearTerminal;
 		special_attack = abilities(7);
@@ -451,6 +462,7 @@ void Player::WildBattle()
 			{
 				while (true)
 				{
+					battleHistory.clear();
 					std::cout << color("Wild pokemon: ", BrightWhite);
 					opponent.BattleStats();
 					std::cout << color("Choose the pokemon to fight.", BrightWhite) << std::endl;
@@ -506,11 +518,11 @@ void Player::WildBattle()
 					std::cout << clearTerminal;
 				} while (choice != "t" && choice != "T");
 				// pokemon wasn't caught - it can escape now
-				if ((choice == "t" || choice == "T") && rand() % 100 - 10 * i * i * i > exp * 50 / (0.5 * opponent.cp + 100 * opponent.pp + 10 * opponent.hp_left))
+				if ((choice == "t" || choice == "T") && std::rand() % 100 - 10 * i * i * i > exp * 50 / (0.5 * opponent.cp + 100 * opponent.pp + 10 * opponent.hp_left))
 				{
 					std::cout << color("The pokemon escaped from the pokeball!", BrightYellow) << std::endl << std::endl;
 					// pokemon may escape
-					if (rand()%100 < 80 * opponent.hp_left / opponent.hp)
+					if (std::rand()%100 < 80 * opponent.hp_left / opponent.hp)
 					{
 						sleep(3);
 						std::cout << color("Oh no, the pokemon run away from you!", Yellow) 
@@ -577,6 +589,7 @@ void Player::CoachBattle()
 {
 	// spawning the random pokemon
 	Pokemon opponent(exp);
+	std::vector<std::string> battleHistory = {};
 	// decision if to take up a battle
 	std::cout << clearTerminal;
 	std::cout << color("You have encountered a pokemon coach and they want to fight with you!", BrightWhite) << std::endl 
@@ -641,6 +654,9 @@ void Player::CoachBattle()
 				std::cout << color(std::to_string(i + 1) + ". ", BrightWhite) 
 				<< color(types_s[pokedex[fighter->index - 1].type[i]], (ColorName)typeColors[pokedex[fighter->index - 1].type[i]]) 
 				<< color(" attack.", BrightWhite) << std::endl;
+			std::cout << std::endl << "Battle history:" << std::endl;
+			for (int i = 0; i < battleHistory.size(); i++)
+				std::cout << std::setprecision(1) << battleHistory[i] << std::endl;
 			std::cin >> choice_t;
 			std::cout << clearTerminal;
 			if (!std::cin.good()) {
@@ -658,7 +674,10 @@ void Player::CoachBattle()
 		fighter->BattleStats();
 		std::cout << color("Coached pokemon: ", BrightWhite);
 		opponent.BattleStats();
-		Attack(fighter, &opponent, effect);
+		battleHistory.push_back(Attack(fighter, &opponent, effect));
+		std::cout << std::endl << "Battle history:" << std::endl;
+		for (int i = 0; i < battleHistory.size(); i++)
+			std::cout << std::setprecision(1) << battleHistory[i] << std::endl;
 		sleep(3);
 		special_attack = abilities(7);
 		special_attack2 = abilities(7);
@@ -692,8 +711,11 @@ void Player::CoachBattle()
 		std::cout << color("Coached pokemon: ", BrightWhite);
 		opponent.BattleStats();
 		// the coached pokemon strikes back
-		effect = pokedex[opponent.index - 1].type[rand()%(pokedex[opponent.index - 1].type.size())];
-		Attack(&opponent, fighter, effect);
+		effect = pokedex[opponent.index - 1].type[std::rand()%(pokedex[opponent.index - 1].type.size())];
+		battleHistory.push_back(Attack(&opponent, fighter, effect));
+		std::cout << std::endl << "Battle history:" << std::endl;
+		for (int i = 0; i < battleHistory.size(); i++)
+			std::cout << std::setprecision(1) << battleHistory[i] << std::endl;
 		sleep(3);
 		special_attack = abilities(7);
 		special_attack2 = abilities(7);
@@ -765,19 +787,19 @@ void Player::Treasure()
 	sleep(3);
 }
 
-// method activating game module: encountering a marchant
+// method activating game module: encountering a merchant
 void Player::Marchant()
 {
 	std::cout << clearTerminal;
-	// generating the set of items and pokemons (inventory of the marchant)
-	std::vector <Potion> marchant_pot;
+	// generating the set of items and pokemons (inventory of the merchant)
+	std::vector <Potion> merchant_pot;
 	for (int i = 0; i < 6; i++)
-		marchant_pot.push_back(Potion());
+		merchant_pot.push_back(Potion());
 	int lot = rand()%3;
-	std::vector <Pokemon> marchant_pok;
+	std::vector <Pokemon> merchant_pok;
 	for (int i = 0; i < lot; i++)
-		marchant_pok.push_back(Pokemon(exp));
-	// dispaying the inventory of the marchant
+		merchant_pok.push_back(Pokemon(exp));
+	// dispaying the inventory of the merchant
 	//transaction module
 	std::string choice;
 	while (true)
@@ -785,16 +807,16 @@ void Player::Marchant()
 		do
 		{
 			ShowStats();
-			std::cout << std::endl << color("You've encountered a marchant!", BrightWhite) << std::endl
-				<< color("What you can buy from the marchant:", BrightWhite) << std::endl;
-			for (int i = 0; i < marchant_pot.size(); i++)
+			std::cout << std::endl << color("You've encountered a merchant!", BrightWhite) << std::endl
+				<< color("What you can buy from the merchant:", BrightWhite) << std::endl;
+			for (int i = 0; i < merchant_pot.size(); i++)
 				std::cout << color(std::to_string(i + 1), BrightWhite) << " " 
-					<< marchant_pot[i].ShowKind() << " " 
-					<< color(std::to_string(marchant_pot[i].ShowPoints()), BrightWhite) << " " 
-					<< color(std::to_string(marchant_pot[i].ShowPrice()) + " gold", BrightYellow) << std::endl;
-			for (int i = 0; i < marchant_pok.size(); i++)
-				std::cout << color(std::to_string(i + marchant_pot.size() + 1) + ". Mystery pokemon ", BrightWhite) 
-				<< color(std::to_string(marchant_pok[i].ShowPrice()) + " gold", BrightYellow) << std::endl;
+					<< merchant_pot[i].ShowKind() << " " 
+					<< color(std::to_string(merchant_pot[i].ShowPoints()), BrightWhite) << " " 
+					<< color(std::to_string(merchant_pot[i].ShowPrice()) + " gold", BrightYellow) << std::endl;
+			for (int i = 0; i < merchant_pok.size(); i++)
+				std::cout << color(std::to_string(i + merchant_pot.size() + 1) + ". Mystery pokemon ", BrightWhite) 
+				<< color(std::to_string(merchant_pok[i].ShowPrice()) + " gold", BrightYellow) << std::endl;
 			std::cout << color("What would you like to do?", BrightWhite) << std::endl
 				<< color("SP: Sell pokemon   ST: Sell potion   B: Buy   Q: Quit", BrightWhite) << std::endl;
 			std::cin >> choice;
@@ -821,21 +843,21 @@ void Player::Marchant()
 				do 
 				{
 					ShowStats();
-					std::cout << color("What you can buy from the marchant:", BrightWhite) << std::endl;
-					for (int i = 0; i < marchant_pot.size(); i++)
+					std::cout << color("What you can buy from the merchant:", BrightWhite) << std::endl;
+					for (int i = 0; i < merchant_pot.size(); i++)
 						std::cout << color(std::to_string(i + 1), BrightWhite) << " "
-						<< marchant_pot[i].ShowKind() << " "
-						<< color(std::to_string(marchant_pot[i].ShowPoints()), BrightWhite) << " "
-						<< color(std::to_string(marchant_pot[i].ShowPrice()) + " gold", BrightYellow) << std::endl;
-					for (int i = 0; i < marchant_pok.size(); i++)
-						std::cout << color(std::to_string(i + marchant_pot.size() + 1) + ". Mystery pokemon ", BrightWhite)
-						<< color(std::to_string(marchant_pok[i].ShowPrice()) + " gold", BrightYellow) << std::endl;
-					std::cout << color("Choose item from the marchant to buy or 'Q' to quit.", BrightWhite) << std::endl;
+						<< merchant_pot[i].ShowKind() << " "
+						<< color(std::to_string(merchant_pot[i].ShowPoints()), BrightWhite) << " "
+						<< color(std::to_string(merchant_pot[i].ShowPrice()) + " gold", BrightYellow) << std::endl;
+					for (int i = 0; i < merchant_pok.size(); i++)
+						std::cout << color(std::to_string(i + merchant_pot.size() + 1) + ". Mystery pokemon ", BrightWhite)
+						<< color(std::to_string(merchant_pok[i].ShowPrice()) + " gold", BrightYellow) << std::endl;
+					std::cout << color("Choose item from the merchant to buy or 'Q' to quit.", BrightWhite) << std::endl;
 					std::cin >> bought;
 					std::cout << clearTerminal;
 					if (choice == "q" || choice =="Q" || std::stoi(bought)) break;
 					else std::cout << invalidInput << std::endl;
-				} while (std::stoi(bought) > marchant_pot.size() + marchant_pok.size() && choice != "q" && choice != "Q");
+				} while (std::stoi(bought) > merchant_pot.size() + merchant_pok.size() && choice != "q" && choice != "Q");
 			}
 			catch (const std::exception &e)
 			{
@@ -843,15 +865,15 @@ void Player::Marchant()
 					std::cout << std::endl << invalidInput << std::endl;
 			}
 			if (bought == "q" || bought == "Q") continue;
-			else if (std::stoi(bought) > marchant_pot.size())
+			else if (std::stoi(bought) > merchant_pot.size())
 			{
-				Buy(marchant_pok[std::stoi(bought)-marchant_pot.size()-1]);
-				marchant_pok.erase(marchant_pok.begin() + std::stoi(bought) - marchant_pot.size()-1);
+				Buy(merchant_pok[std::stoi(bought)-merchant_pot.size()-1]);
+				merchant_pok.erase(merchant_pok.begin() + std::stoi(bought) - merchant_pot.size()-1);
 			}	
 			else 
 			{
-				Buy(marchant_pot[std::stoi(bought)-1]);
-				marchant_pot.erase(marchant_pot.begin() + std::stoi(bought) - 1);
+				Buy(merchant_pot[std::stoi(bought)-1]);
+				merchant_pot.erase(merchant_pot.begin() + std::stoi(bought) - 1);
 			}	
 		}
 		else if (choice == "q" || choice == "Q")
@@ -973,6 +995,15 @@ void Player::ShowCaught()
 	}	
 	std::cout << std::endl << color("You still need to catch ", BrightWhite) 
 		<< color(std::to_string(151 - count), Green) << color(" species.", BrightWhite) << std::endl;
+	std::string choice;
+	while (true)
+	{
+		std::cout << std::endl << color("Enter 'Q' to quit", BrightWhite) << std::endl;
+		std::cin >> choice;
+		std::cout << clearTerminal;
+		if (choice == "q" || choice == "Q") return;
+		else std::cout << invalidInput << std::endl;
+	}
 }
 
 // method to write the records to the record file
