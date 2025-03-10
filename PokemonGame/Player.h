@@ -33,7 +33,7 @@ public:
 	// method to sell an object/pokemon from the inventory
 	void SellPokemon();
 	void SellPotion();
-	// method to buy an object/pokemon from the marchant
+	// method to buy an object/pokemon from the merchant
 	void Buy(Potion pot);
 	void Buy(Pokemon pok);
 	// method to show data of the user
@@ -55,7 +55,7 @@ public:
 	void CoachBattle();
 	// method activating game module: finding a treasure
 	void Treasure();
-	// method activating game module: encountering a marchant
+	// method activating game module: encountering a merchant
 	void Marchant();
 	// method activating game module: healing
 	void Healing();

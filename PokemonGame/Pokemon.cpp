@@ -67,7 +67,7 @@ void Pokemon::Evolve()
     }
 }
 
-// default constructor (used while spawning coached/wild/marchant/hostile pokemon)
+// default constructor (used while spawning coached/wild/merchant/hostile pokemon)
 Pokemon::Pokemon(unsigned int pl_exp)
 {
     srand(time(NULL));

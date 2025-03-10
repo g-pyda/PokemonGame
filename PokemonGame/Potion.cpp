@@ -3,7 +3,7 @@
 #include "Potion.h"
 #include "functions.h"
 
-// default constructor used while rendering belongings of the marchant/stuff in the treasure
+// default constructor used while rendering belongings of the merchant/stuff in the treasure
 Potion::Potion()
 {
 	int k = rand()%2, t = rand()%13;
